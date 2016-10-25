@@ -13,9 +13,15 @@ install:
   # At this moment this plugin has overlapping dependencies than qiita so installing everything in the same environment
   - conda create --yes -n qiita_env python=2.7 pip nose flake8
     pyzmq networkx pyparsing natsort mock future libgfortran
-    'pandas>=0.18' 'scipy>0.13.0' 'numpy>=1.7' 'h5py>=2.3.1'
+    'pandas>=0.18' 'scipy>0.13.0' 'numpy>=1.7' 'h5py>=2.3.1' matplotlib
   - source activate qiita_env
+  - export CONDA_BIN=/home/travis/miniconda3/bin
   - pip install sphinx sphinx-bootstrap-theme coveralls ipython[all]==2.4.1
+  # kneaddata dependencies
+  - conda install --yes -c bioconda bowtie2 trimmomatic=0.36 fastqc=0.11.5
+  - export TRIMMOMATIC_BIN=$(readlink -f $(which trimmomatic))
+  - export TRIMMOMATIC_DIR=`dirname $TRIMMOMATIC_BIN`
+  - export KD_DEMO_DB=$PWD/miniconda3/envs/qiita_env/lib/python2.7/site-packages/kneaddata/tests/data/demo_bowtie2_db/demo_db
   - pip install https://github.com/biocore/qiita/archive/master.zip --process-dependency-links
   # installing other deps
   - conda install --yes -c jjhelmus glpk
