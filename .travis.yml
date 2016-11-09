@@ -21,6 +21,8 @@ install:
   - conda install --yes -c jjhelmus glpk
   - conda install --yes -c bioconda diamond bowtie2 trimmomatic=0.36 fastqc=0.11.5
   #
+  - which trimmomatic
+  - echo $PATH
   - ipython profile create qiita-general --parallel
   - qiita-env start_cluster qiita-general
   - qiita-env make --no-load-ontologies
