@@ -23,6 +23,7 @@ install:
   #
   - which trimmomatic
   - echo $PATH
+  - triommomatic
   - ipython profile create qiita-general --parallel
   - qiita-env start_cluster qiita-general
   - qiita-env make --no-load-ontologies
