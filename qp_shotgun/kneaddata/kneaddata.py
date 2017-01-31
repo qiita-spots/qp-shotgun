@@ -162,7 +162,7 @@ def generate_kneaddata_commands(forward_seqs, reverse_seqs, map_file,
     # we match filenames, samples, and run prefixes
     samples = make_read_pairs_per_sample(forward_seqs, reverse_seqs, map_file)
 
-    cmds = []
+    cmds = ['trimmomatic']
 
     param_string = _format_kneaddata_params(parameters)
     for run_prefix, sample, f_fp, r_fp in samples:
