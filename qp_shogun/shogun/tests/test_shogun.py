@@ -55,6 +55,9 @@ class ShogunTests(PluginTestCase):
                 else:
                     remove(fp)
 
+
+class ShogunTestsA(ShogunTests):
+
     def test_get_dbs(self):
         db_path = self.db_path
         obs = get_dbs(db_path)
@@ -196,6 +199,9 @@ class ShogunTests(PluginTestCase):
                 profile_fp, out_dir, 'species', 'redist')
 
         self.assertEqual(obs_cmd, exp_cmd)
+
+
+class ShogunTestsB(ShogunTests):
 
     def test_shogun_bt2(self):
         # generating filepaths
