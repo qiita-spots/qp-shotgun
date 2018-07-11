@@ -16,7 +16,9 @@ from os.path import join, isdir
 import pandas as pd
 from biom import Table
 
-ALIGNERS = ["utree", "burst", "bowtie2"]
+ALIGNERS = ["utree",
+            # "burst",
+            "bowtie2"]
 
 
 def get_dbs(db_folder):

@@ -24,7 +24,10 @@ opt_params = {
     'Database': ["choice: [%s]" % default_db_list,
                  default_db],
     # aligner
-    'Aligner tool': ['choice:["utree", "burst", "bowtie2"]', 'bowtie2'],
+    'Aligner tool': ['choice:[' +
+                     '"utree", ' +
+                     # '"burst", ' +
+                     '"bowtie2"]', 'bowtie2'],
     # threads
     'Number of threads': ['integer', '5'],
     }
