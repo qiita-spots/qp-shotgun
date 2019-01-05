@@ -63,7 +63,7 @@ script:
   - travis_wait 40 nosetests $COVER_PACKAGE --with-doctest --with-coverage --with-timer -vv --cover-package=$COVER_PACKAGE -e  'test_shogun_burst'
   - flake8 qp_shogun setup.py scripts
 addons:
-  postgresql: "9.3"
+  postgresql: "9.5"
 services:
   - redis-server
   - postgresql
