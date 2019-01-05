@@ -59,10 +59,15 @@ def generate_trim_commands(forward_seqs, reverse_seqs, map_file,
     param_string = _format_params(parameters, ATROPOS_PARAMS)
 
     for run_prefix, sample, f_fp, r_fp in samples:
-        cmds.append('atropos trim %s -o %s -p %s -pe1 %s -pe2 %s'
-                    % (param_string, join(out_dir, '%s.R1.fastq.gz' %
-                       run_prefix), join(out_dir, '%s.R2.fastq.gz' %
-                       run_prefix), f_fp, r_fp))
+        if r_fp is None:
+            cmds.append("atropos trim %s -o %s  -se %s" % (
+                param_string, join(out_dir, '%s.R1.fastq.gz' % run_prefix),
+                f_fp))
+        else:
+            cmds.append('atropos trim %s -o %s -p %s -pe1 %s -pe2 %s'
+                        % (param_string, join(out_dir, '%s.R1.fastq.gz' %
+                           run_prefix), join(out_dir, '%s.R2.fastq.gz' %
+                           run_prefix), f_fp, r_fp))
     return cmds, samples
 
 
