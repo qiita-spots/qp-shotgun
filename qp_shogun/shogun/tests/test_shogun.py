@@ -7,7 +7,9 @@
 # -----------------------------------------------------------------------------
 
 from unittest import main
+from functools import partial
 from qiita_client.testing import PluginTestCase
+from qiita_client import ArtifactInfo
 import os
 from os import remove
 from os.path import exists, isdir, join
@@ -410,7 +412,7 @@ class ShogunTests(PluginTestCase):
         self.assertEqual(obs_cmd, exp_cmd)
 
     # Testing shogun with bowtie2
-    def test_shogun_bt2(self):
+    def _helper_shogun_bowtie(self):
         # generating filepaths
         in_dir = mkdtemp()
         self._clean_up_files.append(in_dir)
@@ -425,6 +427,9 @@ class ShogunTests(PluginTestCase):
         copyfile('support_files/S22282_S102_L001_R1_001.fastq.gz', fp2_1)
         copyfile('support_files/S22282_S102_L001_R2_001.fastq.gz', fp2_2)
 
+        return fp1_1, fp1_2, fp2_1, fp2_2
+
+    def test_shogun_bt2(self):
         # inserting new prep template
         prep_info_dict = {
             'SKB8.640193': {'run_prefix': 'S22205_S104'},
@@ -436,6 +441,7 @@ class ShogunTests(PluginTestCase):
         pid = self.qclient.post('/apitest/prep_template/', data=data)['prep']
 
         # inserting artifacts
+        fp1_1, fp1_2, fp2_1, fp2_2 = self._helper_shogun_bowtie()
         data = {
             'filepaths': dumps([
                 (fp1_1, 'raw_forward_seqs'),
@@ -463,27 +469,22 @@ class ShogunTests(PluginTestCase):
         self.assertTrue(success)
 
         # we are expecting 1 artifacts in total
-        self.assertEqual(1, len(ainfo))
-        ainfo = ainfo[0]
-        self.assertEqual(ainfo.artifact_type, 'BIOM')
-        exp = [(join(out_dir, 'otu_table.alignment.profile.biom'), 'biom')]
-        self.assertCountEqual(ainfo.files, exp)
+        pout_dir = partial(join, out_dir)
+        self.assertCountEqual(ainfo, [
+            ArtifactInfo('Shogun Alignment Profile', 'BIOM',
+                         [(pout_dir('otu_table.alignment.profile.biom'),
+                           'biom')]),
+            ArtifactInfo('Taxonomic Predictions - phylum', 'BIOM',
+                         [(pout_dir('otu_table.redist.phylum.biom'),
+                           'biom')]),
+            ArtifactInfo('Taxonomic Predictions - genus', 'BIOM',
+                         [(pout_dir('otu_table.redist.genus.biom'),
+                           'biom')]),
+            ArtifactInfo('Taxonomic Predictions - species', 'BIOM',
+                         [(pout_dir('otu_table.redist.species.biom'),
+                           'biom')])])
 
     def test_shogun_burst(self):
-        # generating filepaths
-        in_dir = mkdtemp()
-        self._clean_up_files.append(in_dir)
-
-        fp1_1 = join(in_dir, 'S22205_S104_L001_R1_001.fastq.gz')
-        fp1_2 = join(in_dir, 'S22205_S104_L001_R2_001.fastq.gz')
-        fp2_1 = join(in_dir, 'S22282_S102_L001_R1_001.fastq.gz')
-        fp2_2 = join(in_dir, 'S22282_S102_L001_R2_001.fastq.gz')
-
-        copyfile('support_files/S22205_S104_L001_R1_001.fastq.gz', fp1_1)
-        copyfile('support_files/S22205_S104_L001_R2_001.fastq.gz', fp1_2)
-        copyfile('support_files/S22282_S102_L001_R1_001.fastq.gz', fp2_1)
-        copyfile('support_files/S22282_S102_L001_R2_001.fastq.gz', fp2_2)
-
         # inserting new prep template
         prep_info_dict = {
            'SKB8.640193': {'run_prefix': 'S22205_S104'},
@@ -495,6 +496,7 @@ class ShogunTests(PluginTestCase):
         pid = self.qclient.post('/apitest/prep_template/', data=data)['prep']
 
         # inserting artifacts
+        fp1_1, fp1_2, fp2_1, fp2_2 = self._helper_shogun_bowtie()
         data = {
            'filepaths': dumps([
                (fp1_1, 'raw_forward_seqs'),
@@ -523,27 +525,22 @@ class ShogunTests(PluginTestCase):
         self.assertTrue(success)
 
         # we are expecting 1 artifacts in total
-        self.assertEqual(1, len(ainfo))
-        ainfo = ainfo[0]
-        self.assertEqual(ainfo.artifact_type, 'BIOM')
-        exp = [(join(out_dir, 'otu_table.alignment.profile.biom'), 'biom')]
-        self.assertCountEqual(ainfo.files, exp)
+        pout_dir = partial(join, out_dir)
+        self.assertCountEqual(ainfo, [
+            ArtifactInfo('Shogun Alignment Profile', 'BIOM',
+                         [(pout_dir('otu_table.alignment.profile.biom'),
+                           'biom')]),
+            ArtifactInfo('Taxonomic Predictions - phylum', 'BIOM',
+                         [(pout_dir('otu_table.redist.phylum.biom'),
+                           'biom')]),
+            ArtifactInfo('Taxonomic Predictions - genus', 'BIOM',
+                         [(pout_dir('otu_table.redist.genus.biom'),
+                           'biom')]),
+            ArtifactInfo('Taxonomic Predictions - species', 'BIOM',
+                         [(pout_dir('otu_table.redist.species.biom'),
+                           'biom')])])
 
     def test_shogun_utree(self):
-        # generating filepaths
-        in_dir = mkdtemp()
-        self._clean_up_files.append(in_dir)
-
-        fp1_1 = join(in_dir, 'S22205_S104_L001_R1_001.fastq.gz')
-        fp1_2 = join(in_dir, 'S22205_S104_L001_R2_001.fastq.gz')
-        fp2_1 = join(in_dir, 'S22282_S102_L001_R1_001.fastq.gz')
-        fp2_2 = join(in_dir, 'S22282_S102_L001_R2_001.fastq.gz')
-
-        copyfile('support_files/S22205_S104_L001_R1_001.fastq.gz', fp1_1)
-        copyfile('support_files/S22205_S104_L001_R2_001.fastq.gz', fp1_2)
-        copyfile('support_files/S22282_S102_L001_R1_001.fastq.gz', fp2_1)
-        copyfile('support_files/S22282_S102_L001_R2_001.fastq.gz', fp2_2)
-
         # inserting new prep template
         prep_info_dict = {
             'SKB8.640193': {'run_prefix': 'S22205_S104'},
@@ -555,6 +552,7 @@ class ShogunTests(PluginTestCase):
         pid = self.qclient.post('/apitest/prep_template/', data=data)['prep']
 
         # inserting artifacts
+        fp1_1, fp1_2, fp2_1, fp2_2 = self._helper_shogun_bowtie()
         data = {
             'filepaths': dumps([
                 (fp1_1, 'raw_forward_seqs'),
@@ -583,11 +581,20 @@ class ShogunTests(PluginTestCase):
         self.assertTrue(success)
 
         # we are expecting 1 artifacts in total
-        self.assertEqual(1, len(ainfo))
-        ainfo = ainfo[0]
-        self.assertEqual(ainfo.artifact_type, 'BIOM')
-        exp = [(join(out_dir, 'otu_table.alignment.profile.biom'), 'biom')]
-        self.assertCountEqual(ainfo.files, exp)
+        pout_dir = partial(join, out_dir)
+        self.assertCountEqual(ainfo, [
+            ArtifactInfo('Shogun Alignment Profile', 'BIOM',
+                         [(pout_dir('otu_table.alignment.profile.biom'),
+                           'biom')]),
+            ArtifactInfo('Taxonomic Predictions - phylum', 'BIOM',
+                         [(pout_dir('otu_table.redist.phylum.biom'),
+                           'biom')]),
+            ArtifactInfo('Taxonomic Predictions - genus', 'BIOM',
+                         [(pout_dir('otu_table.redist.genus.biom'),
+                           'biom')]),
+            ArtifactInfo('Taxonomic Predictions - species', 'BIOM',
+                         [(pout_dir('otu_table.redist.species.biom'),
+                           'biom')])])
 
 
 if __name__ == '__main__':
