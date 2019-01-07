@@ -74,7 +74,7 @@ def generate_shogun_assign_taxonomy_commands(temp_dir, parameters):
     ext = aln2ext[parameters['aligner']]
     output_fp = join(temp_dir, 'profile.tsv')
     cmds.append(
-        'shogun assign_taxonomy '
+        'shogun assign-taxonomy '
         '--aligner {aligner} '
         '--database {database} '
         '--input {input} --output {output}'.format(

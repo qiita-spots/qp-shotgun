@@ -299,6 +299,67 @@ class QC_TrimTests(PluginTestCase):
              (od('kd_test_2.R2.fastq.gz'), 'raw_reverse_seqs')]]
         self.assertEqual(exp_fps, obs_fps)
 
+    def test_trim_just_fwd(self):
+        # generating filepaths
+        in_dir = mkdtemp()
+        self._clean_up_files.append(in_dir)
+
+        fp1 = join(in_dir, 'kd_test_1_R1.fastq.gz')
+        fp2 = join(in_dir, 'kd_test_2_R1.fastq.gz')
+        copyfile('support_files/kd_test_1_R1.fastq.gz', fp1)
+        copyfile('support_files/kd_test_2_R1.fastq.gz', fp2)
+
+        # inserting new prep template
+        prep_info_dict = {
+            'SKB7.640196': {'run_prefix': 'kd_test_1'},
+            'SKB8.640193': {'run_prefix': 'kd_test_2'}
+        }
+        data = {'prep_info': dumps(prep_info_dict),
+                # magic #1 = testing study
+                'study': 1,
+                'data_type': 'Metagenomic'}
+        pid = self.qclient.post('/apitest/prep_template/', data=data)['prep']
+
+        # inserting artifacts
+        data = {
+            'filepaths': dumps([
+                (fp1, 'raw_forward_seqs'),
+                (fp2, 'raw_forward_seqs')]),
+            'type': "per_sample_FASTQ",
+            'name': "Test QC_Trim artifact",
+            'prep': pid}
+        aid = self.qclient.post('/apitest/artifact/', data=data)['artifact']
+
+        self.params['input'] = aid
+        data = {'user': 'demo@microbio.me',
+                'command': dumps(['qp-shogun', '0.1.4', 'Atropos v1.1.15']),
+                'status': 'running',
+                'parameters': dumps(self.params)}
+        jid = self.qclient.post('/apitest/processing_job/', data=data)['job']
+
+        out_dir = mkdtemp()
+        self._clean_up_files.append(out_dir)
+
+        success, ainfo, msg = trim(self.qclient, jid, self.params, out_dir)
+
+        self.assertEqual("", msg)
+        self.assertTrue(success)
+
+        # we are expecting 1 artifact in total
+        self.assertEqual(1, len(ainfo))
+
+        obs_fps = []
+        for a in ainfo:
+            self.assertEqual("per_sample_FASTQ", a.artifact_type)
+            obs_fps.append(a.files)
+        od = partial(join, out_dir)
+
+        # ftype = 'per_sample_FASTQ'
+        exp_fps = [
+            [(od('kd_test_1.R1.fastq.gz'), 'raw_forward_seqs'),
+             (od('kd_test_2.R1.fastq.gz'), 'raw_forward_seqs')]]
+        self.assertEqual(exp_fps, obs_fps)
+
     def test_per_sample_ainfo_error(self):
         in_dir = mkdtemp()
         self._clean_up_files.append(in_dir)
