@@ -195,7 +195,16 @@ class ShogunTests(PluginTestCase):
                 ]
             exp = join(fp, 'combined.fna')
             obs = generate_fna_file(fp, sample)
+        self.assertEqual(obs, exp)
 
+        # test with only forward
+        with TemporaryDirectory(dir=out_dir, prefix='shogun_') as fp:
+            sample = [
+                ('s1', 'SKB8.640193', 'support_files/kd_test_1_R1.fastq.gz',
+                 None)
+                ]
+            exp = join(fp, 'combined.fna')
+            obs = generate_fna_file(fp, sample)
         self.assertEqual(obs, exp)
 
     def test_shogun_db_functional_parser(self):

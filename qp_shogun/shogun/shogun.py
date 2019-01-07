@@ -31,12 +31,13 @@ def generate_fna_file(temp_path, samples):
                 output.write(">%s_%d\n" % (sample, count))
                 output.write("%s\n" % seq)
                 count += 1
-        with gzip.open(r_fp, 'rt') as fp:
-            # Loop through reverse file
-            for header, seq, qual in readfq(fp):
-                output.write(">%s_%d\n" % (sample, count))
-                output.write("%s\n" % seq)
-                count += 1
+        if r_fp is not None:
+            with gzip.open(r_fp, 'rt') as fp:
+                # Loop through reverse file
+                for header, seq, qual in readfq(fp):
+                    output.write(">%s_%d\n" % (sample, count))
+                    output.write("%s\n" % seq)
+                    count += 1
     output.close()
 
     return output_fp
