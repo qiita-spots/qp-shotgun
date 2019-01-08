@@ -31,7 +31,12 @@ opt_params = {
     # threads
     'Number of threads': ['integer', '5'],
     }
-outputs = {'Shogun Alignment Profile': 'BIOM'}
+outputs = {
+    'Shogun Alignment Profile': 'BIOM',
+    'Taxonomic Predictions - phylum': 'BIOM',
+    'Taxonomic Predictions - genus': 'BIOM',
+    'Taxonomic Predictions - species': 'BIOM',
+    }
 dflt_param_set = generate_shogun_dflt_params()
 
 shogun_cmd = QiitaCommand(
