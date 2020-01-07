@@ -12,6 +12,7 @@ before_install:
   - conda update --yes conda
 install:
   # installing qiita environment
+  - conda config --add channels anaconda
   - travis_retry conda create -q --yes -n qiita python=3.6 pip libgfortran numpy nginx
   - source activate qiita
   - pip install sphinx sphinx-bootstrap-theme coveralls
