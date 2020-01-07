@@ -2,7 +2,7 @@ language: python
 sudo: required
 group: deprecated-2017Q4
 env:
-  - PYTHON_VERSION=3.5 COVER_PACKAGE="qp_shogun/filter qp_shogun/trim qp_shogun/shogun"
+  - PYTHON_VERSION=3.6 COVER_PACKAGE="qp_shogun/filter qp_shogun/trim qp_shogun/shogun"
 before_install:
   - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
   - chmod +x miniconda.sh
@@ -25,33 +25,33 @@ install:
   - qiita-env make --no-load-ontologies
   - source deactivate
   # installing qp-shogun
-  - conda create --yes -n qp-shogun python=$PYTHON_VERSION pip nose flake8
+  - conda config --add channels defaults
+  - conda config --add channels bioconda
+  - conda config --add channels conda-forge
+  - conda create --yes -n qp-shogun -c knights-lab shogun=1.0.7 python=$PYTHON_VERSION
   - source activate qp-shogun
-  - pip install -U pip
-  - conda install --yes pigz
-  - conda install --yes -c bioconda bowtie2 fastqc=0.11.5 samtools bedtools
+  - pip install -U pip pip nose flake8
   - pip install sphinx sphinx-bootstrap-theme nose-timer codecov biopython
   - pip install https://github.com/qiita-spots/qiita_client/archive/master.zip
   - pip install atropos
-  - pip install git+https://github.com/knights-lab/SHOGUN.git
   - export QIITA_SERVER_CERT=$PWD/miniconda3/envs/qiita/lib/python2.7/site-packages/qiita_core/support_files/server.crt
-  # just making sure we have the latest flake8
-  - pip install -U flake8
   - pip install .
   - export QC_FILTER_DB_DP=$PWD/qp_shogun/filter/databases/
   - export QC_SHOGUN_DB_DP=$PWD/qp_shogun/shogun/databases/
   - for file in $(ls $QC_SHOGUN_DB_DP); do tar xvjf $QC_SHOGUN_DB_DP$file -C $QC_SHOGUN_DB_DP; done
-  # installing other dependencies
-  - wget --quiet https://bitbucket.org/biobakery/metaphlan2/get/default.zip
-  - unzip -qq default.zip 'biobakery-metaphlan2*/utils/*' 'biobakery-metaphlan2*/metaphlan2.py'
-  - wget --quiet https://github.com/biocore/oecophylla/blob/dev/test_data/test_dbs/mp2_mini.tar.gz?raw=true -O mp2_mini.tar.gz
-  - tar zxf mp2_mini.tar.gz
-  - wget https://github.com/knights-lab/UTree/releases/download/v2.0c/utree-search_gg
-  - chmod 755 utree-search_gg
-  - mv utree-search_gg $CONDA_PREFIX/bin
-  - wget https://github.com/knights-lab/BURST/releases/download/v0.99.7f/burst_linux_DB15
+  # shogun is currently installing an old version of burst so let's install the correct one
+  - wget https://github.com/knights-lab/BURST/releases/download/v0.99.8/burst_linux_DB15
   - chmod 755 burst_linux_DB15
   - mv burst_linux_DB15 $CONDA_PREFIX/bin/burst15
+  # making sure we have the correct software versions
+  - shogun_version=`shogun --version`
+  - bowtie2_version=`bowtie2 --version`
+  - burst15_version=`burst15 -h | grep BURST`
+  - utree_version=`utree-search_gg`
+  - if [[ $shogun_version != *"1.0.7"* ]]; then echo "wrong shogun version", $shogun_version; exit 1; fi
+  - if [[ $bowtie2_version != *"2.3.5"* ]]; then echo "wrong bowtie2 version", $bowtie2_version; exit 1; fi
+  - if [[ $burst15_version != *"0.99.8"* ]]; then echo "wrong burst15 version", $burst15_version; exit 1; fi
+  - if [[ $utree_version != *"2.0RF"* ]]; then echo "wrong utree version", $utree_version; exit 1; fi
 before_script:
   - source activate qiita
   - qiita pet webserver start &
