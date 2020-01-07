@@ -12,16 +12,17 @@ before_install:
   - conda update --yes conda
 install:
   # installing qiita environment
-  - conda create --yes -n qiita python=2.7 pip nose flake8
-    pyzmq networkx pyparsing natsort mock future libgfortran
-    'pandas>=0.18' 'scipy>0.13.0' 'numpy>=1.7' 'h5py>=2.3.1' matplotlib
+  - travis_retry conda create -q --yes -n qiita python=3.6 pip libgfortran numpy nginx
   - source activate qiita
-  - pip install sphinx sphinx-bootstrap-theme
-  - pip install https://github.com/biocore/qiita/archive/dev.zip --process-dependency-links
-  - sed 's/PORT = 7777/PORT = 6379/g' ${PWD}/miniconda3/envs/qiita/lib/python2.7/site-packages/qiita_core/support_files/config_test.cfg > config_test.cfg
-  - sed "s#/home/travis#${PWD}#g" config_test.cfg > config_test_local.cfg
-  - export QIITA_CONFIG_FP=${PWD}/config_test_local.cfg
-  - export QIITA_SERVER_CERT=${PWD}/miniconda3/envs/qiita/lib/python2.7/site-packages/qiita_core/support_files/server.crt
+  - pip install sphinx sphinx-bootstrap-theme coveralls
+  - pip install https://github.com/biocore/qiita/archive/dev.zip --no-binary redbiom
+  - sed 's/PORT = 7777/PORT = 6379/g' $HOME/miniconda3/envs/qiita/lib/python3.6/site-packages/qiita_core/support_files/config_test.cfg > config_test.cfg
+  - export QIITA_CONFIG_FP=${PWD}/config_test.cfg
+  # starting nginx
+  - mkdir /home/travis/miniconda3/envs/qiita/var/run/nginx/
+  - wget https://github.com/biocore/qiita/archive/dev.zip -O qiita-dev.zip
+  - unzip qiita-dev.zip
+  - nginx -c ${PWD}/qiita-dev/qiita_pet/nginx_example.conf
   - qiita-env make --no-load-ontologies
   - source deactivate
   # installing qp-shogun
