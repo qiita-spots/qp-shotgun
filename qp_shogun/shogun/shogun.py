@@ -60,7 +60,7 @@ def generate_shogun_align_commands(input_fp, temp_dir, parameters):
     cmds = []
     cmds.append(
         'shogun align --aligner {aligner} --threads {threads} '
-        '--database {database} --input {input} --output {output}'
+        '--database {database} --input {input} --output {output} '
         '--percent_id {percent_id}'.format(
             aligner=parameters['aligner'],
             threads=parameters['threads'],
