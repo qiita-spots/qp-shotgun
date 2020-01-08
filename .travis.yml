@@ -21,6 +21,7 @@ install:
   - export QIITA_CONFIG_FP=${PWD}/config_test.cfg
   # starting nginx
   - mkdir /home/travis/miniconda3/envs/qiita/var/run/nginx/
+  - mkdir ${PWD}/miniconda3/envs/qiita/var/run/nginx/
   - wget https://github.com/biocore/qiita/archive/dev.zip -O qiita-dev.zip
   - unzip qiita-dev.zip
   - nginx -c ${PWD}/qiita-dev/qiita_pet/nginx_example.conf
@@ -30,7 +31,7 @@ install:
   - conda config --add channels defaults
   - conda config --add channels bioconda
   - conda config --add channels conda-forge
-  - conda create --yes -n qp-shogun -c knights-lab shogun=1.0.7 python=$PYTHON_VERSION
+  - conda create --yes -n qp-shogun -c knights-lab shogun=1.0.7
   - source activate qp-shogun
   - pip install -U pip pip nose flake8
   - pip install sphinx sphinx-bootstrap-theme nose-timer codecov biopython
