@@ -33,7 +33,8 @@ from qp_shogun.shogun.shogun import (
 
 SHOGUN_PARAMS = {
     'Database': 'database', 'Aligner tool': 'aligner',
-    'Number of threads': 'threads'}
+    'Number of threads': 'threads', 'Capitalist': 'capitalist',
+    'Percent ID': 'percent_id'}
 
 
 class ShogunTests(PluginTestCase):
@@ -48,7 +49,8 @@ class ShogunTests(PluginTestCase):
         self.params = {
             'Database': join(self.db_path, 'rep82'),
             'Aligner tool': 'bowtie2',
-            'Number of threads': 5
+            'Number of threads': 5,
+            'Percent ID': '0.95',
         }
         self._clean_up_files = []
         self._clean_up_files.append(out_dir)
@@ -173,15 +175,21 @@ class ShogunTests(PluginTestCase):
             'rep82_bowtie2': {
                 'Database': join(self.db_path, 'rep82'),
                 'Aligner tool': 'bowtie2',
-                'Number of threads': 5},
+                'Number of threads': 5,
+                'Percent ID': 0.95,
+                'Capitalist': False},
             'rep82_utree': {
                 'Database': join(self.db_path, 'rep82'),
                 'Aligner tool': 'utree',
-                'Number of threads': 5},
+                'Number of threads': 5,
+                'Percent ID': 0.95,
+                'Capitalist': False},
             # 'rep82_burst': {
             #     'Database': join(self.db_path, 'rep82'),
             #     'Aligner tool': 'burst',
-            #     'Number of threads': 5}
+            #     'Number of threads': 5,
+            #     'Percent ID': 0.95,
+            #     'Capitalist': False}
         }
 
         self.assertEqual(obs, exp)
@@ -344,7 +352,9 @@ class ShogunTests(PluginTestCase):
         exp = {
             'database': join(self.db_path, 'rep82'),
             'aligner': 'bowtie2',
-            'threads': 5
+            'threads': 5,
+            'percent_id': 0.95,
+            'capitalist': False
         }
 
         self.assertEqual(obs, exp)
@@ -356,7 +366,7 @@ class ShogunTests(PluginTestCase):
             exp_cmd = [
                 ('shogun align --aligner bowtie2 --threads 5 '
                  '--database %srep82 --input %s/combined.fna '
-                 '--output %s') %
+                 '--output %s --percent_id 0.95') %
                 (self.db_path, temp_dir, temp_dir)
                 ]
 
@@ -371,7 +381,7 @@ class ShogunTests(PluginTestCase):
         with TemporaryDirectory(dir=out_dir, prefix='shogun_') as temp_dir:
 
             exp_cmd = [
-                ('shogun assign_taxonomy --aligner bowtie2 '
+                ('shogun assign_taxonomy --aligner bowtie2 --no-capitalist'
                  '--database %srep82 --input %s/alignment.bowtie2.sam '
                  '--output %s/profile.tsv') %
                 (self.db_path, temp_dir, temp_dir)

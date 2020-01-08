@@ -15,7 +15,8 @@ from biom import util
 
 SHOGUN_PARAMS = {
     'Database': 'database', 'Aligner tool': 'aligner',
-    'Number of threads': 'threads'}
+    'Number of threads': 'threads', 'Capitalist': 'capitalist',
+    'Percent ID': 'percent_id'}
 
 
 def generate_fna_file(temp_path, samples):
@@ -59,10 +60,12 @@ def generate_shogun_align_commands(input_fp, temp_dir, parameters):
     cmds = []
     cmds.append(
         'shogun align --aligner {aligner} --threads {threads} '
-        '--database {database} --input {input} --output {output}'.format(
+        '--database {database} --input {input} --output {output}'
+        '--percent_id {percent_id}'.format(
             aligner=parameters['aligner'],
             threads=parameters['threads'],
             database=parameters['database'],
+            percent_id=parameters['percent_id'],
             input=input_fp,
             output=temp_dir))
 
@@ -74,13 +77,17 @@ def generate_shogun_assign_taxonomy_commands(temp_dir, parameters):
     aln2ext = {'utree': 'tsv', 'burst': 'b6', 'bowtie2': 'sam'}
     ext = aln2ext[parameters['aligner']]
     output_fp = join(temp_dir, 'profile.tsv')
+    capitalist = ('--capitalist' if parameters['capitalist']
+                  else '--no-capitalist')
     cmds.append(
         'shogun assign_taxonomy '
         '--aligner {aligner} '
+        '{capitalist}'
         '--database {database} '
         '--input {input} --output {output}'.format(
             aligner=parameters['aligner'],
             database=parameters['database'],
+            capitalist=capitalist,
             input=join(temp_dir, 'alignment.%s.%s' % (parameters['aligner'],
                                                       ext)),
             output=output_fp))
