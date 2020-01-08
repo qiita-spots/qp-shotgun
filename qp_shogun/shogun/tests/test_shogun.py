@@ -50,7 +50,8 @@ class ShogunTests(PluginTestCase):
             'Database': join(self.db_path, 'rep82'),
             'Aligner tool': 'bowtie2',
             'Number of threads': 5,
-            'Percent ID': '0.95',
+            'Capitalist': False,
+            'Percent ID': 0.95,
         }
         self._clean_up_files = []
         self._clean_up_files.append(out_dir)
