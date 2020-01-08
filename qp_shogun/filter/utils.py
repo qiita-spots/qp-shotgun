@@ -19,9 +19,9 @@ def get_dbs(db_folder):
     dbs = {}
     # Loop through the databases and create a dict of them
     for folder in os.listdir(db_folder):
-            folder_path = join(db_folder, folder)
-            if isdir(folder_path):
-                dbs[folder] = join(folder_path, folder)
+        folder_path = join(db_folder, folder)
+        if isdir(folder_path):
+            dbs[folder] = join(folder_path, folder)
 
     return(dbs)
 
@@ -30,9 +30,9 @@ def get_dbs_list(db_folder):
     dbs = []
     # Loop through the databases and create a list string
     for folder in sorted(os.listdir(db_folder)):
-            folder_path = join(db_folder, folder)
-            if isdir(folder_path):
-                dbs.append(join(folder_path, folder))
+        folder_path = join(db_folder, folder)
+        if isdir(folder_path):
+            dbs.append(join(folder_path, folder))
     dbs_formatted = (', '.join('"' + item + '"' for item in dbs))
 
     return(dbs_formatted)
