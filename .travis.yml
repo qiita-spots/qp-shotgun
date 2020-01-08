@@ -17,7 +17,7 @@ install:
   - source activate qiita
   - pip install sphinx sphinx-bootstrap-theme coveralls
   - pip install https://github.com/biocore/qiita/archive/dev.zip --no-binary redbiom
-  - sed 's/PORT = 7777/PORT = 6379/g' $HOME/miniconda3/envs/qiita/lib/python3.6/site-packages/qiita_core/support_files/config_test.cfg > config_test.cfg
+  - sed 's/PORT = 7777/PORT = 6379/g' $PWD/miniconda3/envs/qiita/lib/python3.6/site-packages/qiita_core/support_files/config_test.cfg > config_test.cfg
   - export QIITA_CONFIG_FP=${PWD}/config_test.cfg
   # starting nginx
   - mkdir /home/travis/miniconda3/envs/qiita/var/run/nginx/
