@@ -371,7 +371,7 @@ class ShogunTests(PluginTestCase):
         with TemporaryDirectory(dir=out_dir, prefix='shogun_') as temp_dir:
 
             exp_cmd = [
-                ('shogun assign-taxonomy --aligner bowtie2 '
+                ('shogun assign_taxonomy --aligner bowtie2 '
                  '--database %srep82 --input %s/alignment.bowtie2.sam '
                  '--output %s/profile.tsv') %
                 (self.db_path, temp_dir, temp_dir)
