@@ -17,6 +17,10 @@ SHOGUN_PARAMS = {
     'Number of threads': 'threads', 'Capitalist': 'capitalist',
     'Percent identity': 'percent_id'}
 
+ALN2EXT = {'utree': 'tsv',
+           'burst': 'b6',
+           'bowtie2': 'sam'}
+
 
 def generate_fna_file(temp_path, samples):
     # Combines reverse and forward seqs per sample
@@ -73,8 +77,7 @@ def generate_shogun_align_commands(input_fp, out_dir, parameters):
 
 def generate_shogun_assign_taxonomy_commands(out_dir, parameters):
     cmds = []
-    aln2ext = {'utree': 'tsv', 'burst': 'b6', 'bowtie2': 'sam'}
-    ext = aln2ext[parameters['aligner']]
+    ext = ALN2EXT[parameters['aligner']]
     output_fp = join(out_dir, 'profile.tsv')
     capitalist = ('--capitalist' if parameters['capitalist']
                   else '--no-capitalist')
@@ -212,13 +215,21 @@ def shogun(qclient, job_id, parameters, out_dir):
     if not success:
         return False, None, msg
 
-    sys_msg = "Step 5 of 6: Converting output to BIOM"
+    sys_msg = "Step 5 of 6: Compressing alignment and converting to BIOM"
     qclient.update_job_step(job_id, msg)
+    alignment_fp = join(out_dir, 'alignment.%s.%s' % (
+        parameters['aligner'], ALN2EXT[parameters['aligner']]))
+    xz_cmd = 'xz -9 -T%s %s' % (parameters['threads'], alignment_fp)
+    success, msg = _run_commands(
+        qclient, job_id, xz_cmd, sys_msg, 'Compressing alignment')
+    if not success:
+        return False, None, msg
     output = run_shogun_to_biom(profile_fp, [None, None, None, True],
                                 out_dir, 'profile')
 
     ainfo = [ArtifactInfo('Shogun Alignment Profile', 'BIOM',
-                          [(output, 'biom')])]
+                          [(output, 'biom'),
+                           ('%s.xz' % alignment_fp, 'log')])]
 
     # Step 5 redistribute profile
     sys_msg = "Step 6 of 6: Redistributed profile with Shogun (%d/{0})"
