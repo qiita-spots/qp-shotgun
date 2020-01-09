@@ -50,5 +50,5 @@ dflt_param_set = {
 }
 
 trim_cmd = QiitaCommand(
-    'Atropos v1.1.15', "Sequence QC - adapter trimming", trim,
+    'Atropos v1.1.24', "Sequence QC - adapter trimming", trim,
     req_params, opt_params, outputs, dflt_param_set)

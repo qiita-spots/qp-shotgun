@@ -29,12 +29,7 @@ from qp_shogun.shogun.shogun import (
     generate_shogun_align_commands, _format_params,
     generate_shogun_assign_taxonomy_commands, generate_fna_file,
     generate_shogun_functional_commands, generate_shogun_redist_commands,
-    shogun)
-
-SHOGUN_PARAMS = {
-    'Database': 'database', 'Aligner tool': 'aligner',
-    'Number of threads': 'threads', 'Capitalist': 'capitalist',
-    'Percent identity': 'percent_id'}
+    shogun, SHOGUN_PARAMS)
 
 
 class ShogunTests(PluginTestCase):
@@ -185,12 +180,12 @@ class ShogunTests(PluginTestCase):
                 'Capitalist': False,
                 'Number of threads': 5,
                 'Percent identity': 0.95},
-            # 'rep82_burst': {
-            #     'Database': join(self.db_path, 'rep82'),
-            #     'Aligner tool': 'burst',
-            #     'Number of threads': 5,
-            #     'Percent identity': 0.95,
-            #     'Capitalist': False}
+            'rep82_burst': {
+                'Database': join(self.db_path, 'rep82'),
+                'Aligner tool': 'burst',
+                'Capitalist': False,
+                'Number of threads': 5,
+                'Percent identity': 0.95}
         }
 
         self.assertEqual(obs, exp)
@@ -475,7 +470,7 @@ class ShogunTests(PluginTestCase):
 
         self.params['input'] = aid
         data = {'user': 'demo@microbio.me',
-                'command': dumps(['qp-shogun', '0.1.5', 'Shogun']),
+                'command': dumps(['qp-shogun', '012020', 'Shogun v1.0.7']),
                 'status': 'running',
                 'parameters': dumps(self.params)}
         jid = self.qclient.post('/apitest/processing_job/', data=data)['job']
@@ -493,7 +488,8 @@ class ShogunTests(PluginTestCase):
         self.assertCountEqual(ainfo, [
             ArtifactInfo('Shogun Alignment Profile', 'BIOM',
                          [(pout_dir('otu_table.alignment.profile.biom'),
-                           'biom')]),
+                           'biom'),
+                          (pout_dir('alignment.bowtie2.sam.xz'), 'log')]),
             ArtifactInfo('Taxonomic Predictions - phylum', 'BIOM',
                          [(pout_dir('otu_table.redist.phylum.biom'),
                            'biom')]),
@@ -531,7 +527,7 @@ class ShogunTests(PluginTestCase):
         self.params['input'] = aid
         self.params['Aligner tool'] = 'burst'
         data = {'user': 'demo@microbio.me',
-                'command': dumps(['qp-shogun', '0.1.5', 'Shogun']),
+                'command': dumps(['qp-shogun', '012020', 'Shogun v1.0.7']),
                 'status': 'running',
                 'parameters': dumps(self.params)}
         jid = self.qclient.post('/apitest/processing_job/', data=data)['job']
@@ -549,7 +545,8 @@ class ShogunTests(PluginTestCase):
         self.assertCountEqual(ainfo, [
             ArtifactInfo('Shogun Alignment Profile', 'BIOM',
                          [(pout_dir('otu_table.alignment.profile.biom'),
-                           'biom')]),
+                           'biom'),
+                          (pout_dir('alignment.burst.b6.xz'), 'log')]),
             ArtifactInfo('Taxonomic Predictions - phylum', 'BIOM',
                          [(pout_dir('otu_table.redist.phylum.biom'),
                            'biom')]),
@@ -587,7 +584,7 @@ class ShogunTests(PluginTestCase):
         self.params['input'] = aid
         self.params['Aligner tool'] = 'utree'
         data = {'user': 'demo@microbio.me',
-                'command': dumps(['qp-shogun', '0.1.5', 'Shogun']),
+                'command': dumps(['qp-shogun', '012020', 'Shogun v1.0.7']),
                 'status': 'running',
                 'parameters': dumps(self.params)}
         jid = self.qclient.post('/apitest/processing_job/', data=data)['job']
@@ -605,7 +602,8 @@ class ShogunTests(PluginTestCase):
         self.assertCountEqual(ainfo, [
             ArtifactInfo('Shogun Alignment Profile', 'BIOM',
                          [(pout_dir('otu_table.alignment.profile.biom'),
-                           'biom')]),
+                           'biom'),
+                          (pout_dir('alignment.utree.tsv.xz'), 'log')]),
             ArtifactInfo('Taxonomic Predictions - phylum', 'BIOM',
                          [(pout_dir('otu_table.redist.phylum.biom'),
                            'biom')]),

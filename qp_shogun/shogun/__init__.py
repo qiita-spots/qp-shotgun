@@ -13,7 +13,7 @@ from os.path import join
 from os import environ
 
 
-__all__ = ['Shogun']
+__all__ = ['shogun']
 
 # Define the shogun command
 default_db = join(environ["QC_SHOGUN_DB_DP"], 'rep82')
@@ -26,7 +26,7 @@ opt_params = {
     # aligner
     'Aligner tool': ['choice:[' +
                      '"utree", ' +
-                     # '"burst", ' +
+                     '"burst", ' +
                      '"bowtie2"]', 'bowtie2'],
     # threads
     'Number of threads': ['integer', '5'],
@@ -42,5 +42,5 @@ outputs = {
 dflt_param_set = generate_shogun_dflt_params()
 
 shogun_cmd = QiitaCommand(
-    'Shogun', "Functional and Taxonomic Predictions", shogun,
+    'Shogun v1.0.7', "Functional and Taxonomic Predictions", shogun,
     req_params, opt_params, outputs, dflt_param_set)

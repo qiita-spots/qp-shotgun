@@ -6,17 +6,21 @@
 # The full license is in the file LICENSE, distributed with this software.
 # -----------------------------------------------------------------------------
 from os.path import join
-from tempfile import TemporaryDirectory
 from .utils import readfq, import_shogun_biom
 from qp_shogun.utils import (make_read_pairs_per_sample, _run_commands)
 import gzip
 from qiita_client import ArtifactInfo
+from qiita_client.util import system_call
 from biom import util
 
 SHOGUN_PARAMS = {
     'Database': 'database', 'Aligner tool': 'aligner',
     'Number of threads': 'threads', 'Capitalist': 'capitalist',
     'Percent identity': 'percent_id'}
+
+ALN2EXT = {'utree': 'tsv',
+           'burst': 'b6',
+           'bowtie2': 'sam'}
 
 
 def generate_fna_file(temp_path, samples):
@@ -56,7 +60,7 @@ def _format_params(parameters, func_params):
     return params
 
 
-def generate_shogun_align_commands(input_fp, temp_dir, parameters):
+def generate_shogun_align_commands(input_fp, out_dir, parameters):
     cmds = []
     cmds.append(
         'shogun align --aligner {aligner} --threads {threads} '
@@ -67,16 +71,15 @@ def generate_shogun_align_commands(input_fp, temp_dir, parameters):
             database=parameters['database'],
             percent_id=parameters['percent_id'],
             input=input_fp,
-            output=temp_dir))
+            output=out_dir))
 
     return cmds
 
 
-def generate_shogun_assign_taxonomy_commands(temp_dir, parameters):
+def generate_shogun_assign_taxonomy_commands(out_dir, parameters):
     cmds = []
-    aln2ext = {'utree': 'tsv', 'burst': 'b6', 'bowtie2': 'sam'}
-    ext = aln2ext[parameters['aligner']]
-    output_fp = join(temp_dir, 'profile.tsv')
+    ext = ALN2EXT[parameters['aligner']]
+    output_fp = join(out_dir, 'profile.tsv')
     capitalist = ('--capitalist' if parameters['capitalist']
                   else '--no-capitalist')
     cmds.append(
@@ -88,17 +91,17 @@ def generate_shogun_assign_taxonomy_commands(temp_dir, parameters):
             aligner=parameters['aligner'],
             database=parameters['database'],
             capitalist=capitalist,
-            input=join(temp_dir, 'alignment.%s.%s' % (parameters['aligner'],
-                                                      ext)),
+            input=join(out_dir, 'alignment.%s.%s' % (
+                parameters['aligner'], ext)),
             output=output_fp))
 
     return cmds, output_fp
 
 
-def generate_shogun_functional_commands(profile_dir, temp_dir,
+def generate_shogun_functional_commands(profile_dir, out_dir,
                                         parameters, sel_level):
     cmds = []
-    output = join(temp_dir, 'functional')
+    output = join(out_dir, 'functional')
     cmds.append(
         'shogun functional '
         '--database {database} '
@@ -113,10 +116,10 @@ def generate_shogun_functional_commands(profile_dir, temp_dir,
     return cmds, output
 
 
-def generate_shogun_redist_commands(profile_dir, temp_dir,
+def generate_shogun_redist_commands(profile_dir, out_dir,
                                     parameters, sel_level):
     cmds = []
-    output = join(temp_dir, 'profile.redist.%s.tsv' % sel_level)
+    output = join(out_dir, 'profile.redist.%s.tsv' % sel_level)
     cmds.append(
         'shogun redistribute '
         '--database {database} '
@@ -183,64 +186,73 @@ def shogun(qclient, job_id, parameters, out_dir):
     qclient.update_job_step(
         job_id, "Step 2 of 6: Converting to FNA for Shogun")
 
-    with TemporaryDirectory(dir=out_dir, prefix='shogun_') as temp_dir:
-        rs = fps['raw_reverse_seqs'] if 'raw_reverse_seqs' in fps else []
-        samples = make_read_pairs_per_sample(
-            fps['raw_forward_seqs'], rs, qiime_map)
+    rs = fps['raw_reverse_seqs'] if 'raw_reverse_seqs' in fps else []
+    samples = make_read_pairs_per_sample(
+        fps['raw_forward_seqs'], rs, qiime_map)
 
-        # Combining files
-        comb_fp = generate_fna_file(temp_dir, samples)
+    # Combining files
+    comb_fp = generate_fna_file(out_dir, samples)
 
-        # Formatting parameters
-        parameters = _format_params(parameters, SHOGUN_PARAMS)
+    # Formatting parameters
+    parameters = _format_params(parameters, SHOGUN_PARAMS)
 
-        # Step 3 align
-        align_cmd = generate_shogun_align_commands(
-            comb_fp, temp_dir, parameters)
-        sys_msg = "Step 3 of 6: Aligning FNA with Shogun (%d/{0})".format(
-            len(align_cmd))
+    # Step 3 align
+    align_cmd = generate_shogun_align_commands(
+        comb_fp, out_dir, parameters)
+    sys_msg = "Step 3 of 6: Aligning FNA with Shogun (%d/{0})".format(
+        len(align_cmd))
+    success, msg = _run_commands(
+        qclient, job_id, align_cmd, sys_msg, 'Shogun Align')
+
+    if not success:
+        return False, None, msg
+
+    # Step 4 taxonomic profile
+    sys_msg = "Step 4 of 6: Taxonomic profile with Shogun (%d/{0})"
+    assign_cmd, profile_fp = generate_shogun_assign_taxonomy_commands(
+        out_dir, parameters)
+    success, msg = _run_commands(
+        qclient, job_id, assign_cmd, sys_msg, 'Shogun taxonomy assignment')
+    if not success:
+        return False, None, msg
+
+    sys_msg = "Step 5 of 6: Compressing and converting alignment to BIOM"
+    qclient.update_job_step(job_id, msg)
+    alignment_fp = join(out_dir, 'alignment.%s.%s' % (
+        parameters['aligner'], ALN2EXT[parameters['aligner']]))
+    xz_cmd = 'xz -9 -T%s %s' % (parameters['threads'], alignment_fp)
+    std_out, std_err, return_value = system_call(xz_cmd)
+    if return_value != 0:
+        error_msg = ("Error during %s:\nStd out: %s\nStd err: %s"
+                     "\n\nCommand run was:\n%s"
+                     % (sys_msg, std_out, std_err, xz_cmd))
+        return False, None, error_msg
+    output = run_shogun_to_biom(profile_fp, [None, None, None, True],
+                                out_dir, 'profile')
+
+    ainfo = [ArtifactInfo('Shogun Alignment Profile', 'BIOM',
+                          [(output, 'biom'),
+                           ('%s.xz' % alignment_fp, 'log')])]
+
+    # Step 5 redistribute profile
+    sys_msg = "Step 6 of 6: Redistributed profile with Shogun (%d/{0})"
+    levels = ['phylum', 'genus', 'species']
+    redist_fps = []
+    for level in levels:
+        redist_cmd, output = generate_shogun_redist_commands(
+            profile_fp, out_dir, parameters, level)
+        redist_fps.append(output)
         success, msg = _run_commands(
-            qclient, job_id, align_cmd, sys_msg, 'Shogun Align')
-
+            qclient, job_id, redist_cmd, sys_msg, 'Shogun redistribute')
         if not success:
             return False, None, msg
-
-        # Step 4 taxonomic profile
-        sys_msg = "Step 4 of 6: Taxonomic profile with Shogun (%d/{0})"
-        assign_cmd, profile_fp = generate_shogun_assign_taxonomy_commands(
-            temp_dir, parameters)
-        success, msg = _run_commands(
-            qclient, job_id, assign_cmd, sys_msg, 'Shogun taxonomy assignment')
-        if not success:
-            return False, None, msg
-
-        sys_msg = "Step 5 of 6: Converting output to BIOM"
-        qclient.update_job_step(job_id, msg)
-        output = run_shogun_to_biom(profile_fp, [None, None, None, True],
-                                    out_dir, 'profile')
-
-        ainfo = [ArtifactInfo('Shogun Alignment Profile', 'BIOM',
-                              [(output, 'biom')])]
-
-        # Step 5 redistribute profile
-        sys_msg = "Step 6 of 6: Redistributed profile with Shogun (%d/{0})"
-        levels = ['phylum', 'genus', 'species']
-        redist_fps = []
-        for level in levels:
-            redist_cmd, output = generate_shogun_redist_commands(
-                profile_fp, temp_dir, parameters, level)
-            redist_fps.append(output)
-            success, msg = _run_commands(
-                qclient, job_id, redist_cmd, sys_msg, 'Shogun redistribute')
-            if not success:
-                return False, None, msg
-        # Converting redistributed files to biom
-        for redist_fp, level in zip(redist_fps, levels):
-            biom_in = ["redist", None, '', True]
-            output = run_shogun_to_biom(
-                redist_fp, biom_in, out_dir, level, 'redist')
-            aname = 'Taxonomic Predictions - %s' % level
-            ainfo.append(ArtifactInfo(aname, 'BIOM', [(output, 'biom')]))
+    # Converting redistributed files to biom
+    for redist_fp, level in zip(redist_fps, levels):
+        biom_in = ["redist", None, '', True]
+        output = run_shogun_to_biom(
+            redist_fp, biom_in, out_dir, level, 'redist')
+        aname = 'Taxonomic Predictions - %s' % level
+        ainfo.append(ArtifactInfo(aname, 'BIOM', [(output, 'biom')]))
 
     return True, ainfo, ""
 
@@ -255,7 +267,7 @@ def shogun(qclient, job_id, parameters, out_dir):
 # func_fp = ''
 # for level in levels:
 #     func_cmd, output = generate_shogun_functional_commands(
-#         profile_fp, temp_dir, parameters, level)
+#         profile_fp, out_dir, parameters, level)
 #     func_fp = output
 #     success, msg = _run_commands(
 #         qclient, job_id, func_cmd, sys_msg, 'Shogun functional')
