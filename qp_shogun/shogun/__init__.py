@@ -31,7 +31,7 @@ opt_params = {
     # threads
     'Number of threads': ['integer', '5'],
     'Capitalist': ['boolean', 'False'],
-    'Percent ID': ['float', '0.95'],
+    'Percent identity': ['float', '0.95'],
     }
 outputs = {
     'Shogun Alignment Profile': 'BIOM',

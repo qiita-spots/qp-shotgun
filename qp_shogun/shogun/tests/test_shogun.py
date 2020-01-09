@@ -34,7 +34,7 @@ from qp_shogun.shogun.shogun import (
 SHOGUN_PARAMS = {
     'Database': 'database', 'Aligner tool': 'aligner',
     'Number of threads': 'threads', 'Capitalist': 'capitalist',
-    'Percent ID': 'percent_id'}
+    'Percent identity': 'percent_id'}
 
 
 class ShogunTests(PluginTestCase):
@@ -51,7 +51,7 @@ class ShogunTests(PluginTestCase):
             'Aligner tool': 'bowtie2',
             'Number of threads': 5,
             'Capitalist': False,
-            'Percent ID': 0.95,
+            'Percent identity': 0.95,
         }
         self._clean_up_files = []
         self._clean_up_files.append(out_dir)
@@ -178,18 +178,18 @@ class ShogunTests(PluginTestCase):
                 'Aligner tool': 'bowtie2',
                 'Capitalist': False,
                 'Number of threads': 5,
-                'Percent ID': 0.95},
+                'Percent identity': 0.95},
             'rep82_utree': {
                 'Database': join(self.db_path, 'rep82'),
                 'Aligner tool': 'utree',
                 'Capitalist': False,
                 'Number of threads': 5,
-                'Percent ID': 0.95},
+                'Percent identity': 0.95},
             # 'rep82_burst': {
             #     'Database': join(self.db_path, 'rep82'),
             #     'Aligner tool': 'burst',
             #     'Number of threads': 5,
-            #     'Percent ID': 0.95,
+            #     'Percent identity': 0.95,
             #     'Capitalist': False}
         }
 

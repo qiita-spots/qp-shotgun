@@ -16,7 +16,7 @@ from biom import util
 SHOGUN_PARAMS = {
     'Database': 'database', 'Aligner tool': 'aligner',
     'Number of threads': 'threads', 'Capitalist': 'capitalist',
-    'Percent ID': 'percent_id'}
+    'Percent identity': 'percent_id'}
 
 
 def generate_fna_file(temp_path, samples):
