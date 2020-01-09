@@ -221,7 +221,7 @@ def shogun(qclient, job_id, parameters, out_dir):
         parameters['aligner'], ALN2EXT[parameters['aligner']]))
     xz_cmd = 'xz -9 -T%s %s' % (parameters['threads'], alignment_fp)
     success, msg = _run_commands(
-        qclient, job_id, xz_cmd, sys_msg, 'Compressing alignment')
+        qclient, job_id, [xz_cmd], sys_msg, 'Compressing alignment')
     if not success:
         return False, None, msg
     output = run_shogun_to_biom(profile_fp, [None, None, None, True],
