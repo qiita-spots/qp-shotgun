@@ -10,6 +10,7 @@ from .utils import readfq, import_shogun_biom
 from qp_shogun.utils import (make_read_pairs_per_sample, _run_commands)
 import gzip
 from qiita_client import ArtifactInfo
+from qiita_client.util import system_call
 from biom import util
 
 SHOGUN_PARAMS = {
@@ -215,15 +216,17 @@ def shogun(qclient, job_id, parameters, out_dir):
     if not success:
         return False, None, msg
 
-    sys_msg = "Step 5 of 6: Compressing alignment and converting to BIOM"
+    sys_msg = "Step 5 of 6: Compressing and converting alignment to BIOM"
     qclient.update_job_step(job_id, msg)
     alignment_fp = join(out_dir, 'alignment.%s.%s' % (
         parameters['aligner'], ALN2EXT[parameters['aligner']]))
     xz_cmd = 'xz -9 -T%s %s' % (parameters['threads'], alignment_fp)
-    success, msg = _run_commands(
-        qclient, job_id, [xz_cmd], sys_msg, 'Compressing alignment')
-    if not success:
-        return False, None, msg
+    std_out, std_err, return_value = system_call(xz_cmd)
+    if return_value != 0:
+        error_msg = ("Error during %s:\nStd out: %s\nStd err: %s"
+                     "\n\nCommand run was:\n%s"
+                     % (sys_msg, std_out, std_err, xz_cmd))
+        return False, None, error_msg
     output = run_shogun_to_biom(profile_fp, [None, None, None, True],
                                 out_dir, 'profile')
 
