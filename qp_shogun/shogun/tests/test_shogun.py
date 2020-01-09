@@ -185,12 +185,12 @@ class ShogunTests(PluginTestCase):
                 'Capitalist': False,
                 'Number of threads': 5,
                 'Percent identity': 0.95},
-            # 'rep82_burst': {
-            #     'Database': join(self.db_path, 'rep82'),
-            #     'Aligner tool': 'burst',
-            #     'Number of threads': 5,
-            #     'Percent identity': 0.95,
-            #     'Capitalist': False}
+            'rep82_burst': {
+                'Database': join(self.db_path, 'rep82'),
+                'Aligner tool': 'burst',
+                'Capitalist': False,
+                'Number of threads': 5,
+                'Percent identity': 0.95}
         }
 
         self.assertEqual(obs, exp)

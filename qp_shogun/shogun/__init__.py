@@ -26,7 +26,7 @@ opt_params = {
     # aligner
     'Aligner tool': ['choice:[' +
                      '"utree", ' +
-                     # '"burst", ' +
+                     '"burst", ' +
                      '"bowtie2"]', 'bowtie2'],
     # threads
     'Number of threads': ['integer', '5'],
