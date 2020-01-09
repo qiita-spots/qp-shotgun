@@ -82,7 +82,7 @@ def generate_shogun_assign_taxonomy_commands(temp_dir, parameters):
     cmds.append(
         'shogun assign_taxonomy '
         '--aligner {aligner} '
-        '{capitalist}'
+        '{capitalist} '
         '--database {database} '
         '--input {input} --output {output}'.format(
             aligner=parameters['aligner'],
