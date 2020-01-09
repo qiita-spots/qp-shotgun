@@ -176,15 +176,15 @@ class ShogunTests(PluginTestCase):
             'rep82_bowtie2': {
                 'Database': join(self.db_path, 'rep82'),
                 'Aligner tool': 'bowtie2',
+                'Capitalist': False,
                 'Number of threads': 5,
-                'Percent ID': 0.95,
-                'Capitalist': False},
+                'Percent ID': 0.95},
             'rep82_utree': {
                 'Database': join(self.db_path, 'rep82'),
                 'Aligner tool': 'utree',
+                'Capitalist': False,
                 'Number of threads': 5,
-                'Percent ID': 0.95,
-                'Capitalist': False},
+                'Percent ID': 0.95},
             # 'rep82_burst': {
             #     'Database': join(self.db_path, 'rep82'),
             #     'Aligner tool': 'burst',
@@ -382,7 +382,7 @@ class ShogunTests(PluginTestCase):
         with TemporaryDirectory(dir=out_dir, prefix='shogun_') as temp_dir:
 
             exp_cmd = [
-                ('shogun assign_taxonomy --aligner bowtie2 --no-capitalist'
+                ('shogun assign_taxonomy --aligner bowtie2 --no-capitalist '
                  '--database %srep82 --input %s/alignment.bowtie2.sam '
                  '--output %s/profile.tsv') %
                 (self.db_path, temp_dir, temp_dir)
