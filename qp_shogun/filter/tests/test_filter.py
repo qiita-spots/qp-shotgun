@@ -156,7 +156,7 @@ class QC_FilterTests(PluginTestCase):
 
         self.params['input'] = aid
         data = {'user': 'demo@microbio.me',
-                'command': dumps(['qp-shogun', '1.0.7', 'QC_Filter']),
+                'command': dumps(['qp-shogun', '012020', 'QC_Filter']),
                 'status': 'running',
                 'parameters': dumps(self.params)}
         jid = self.qclient.post('/apitest/processing_job/', data=data)['job']

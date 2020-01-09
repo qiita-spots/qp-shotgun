@@ -11,7 +11,7 @@
 from setuptools import setup
 
 
-__version__ = "1.0.7"
+__version__ = "012020"
 
 
 classes = """
