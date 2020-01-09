@@ -29,12 +29,7 @@ from qp_shogun.shogun.shogun import (
     generate_shogun_align_commands, _format_params,
     generate_shogun_assign_taxonomy_commands, generate_fna_file,
     generate_shogun_functional_commands, generate_shogun_redist_commands,
-    shogun)
-
-SHOGUN_PARAMS = {
-    'Database': 'database', 'Aligner tool': 'aligner',
-    'Number of threads': 'threads', 'Capitalist': 'capitalist',
-    'Percent identity': 'percent_id'}
+    shogun, SHOGUN_PARAMS)
 
 
 class ShogunTests(PluginTestCase):
@@ -493,7 +488,8 @@ class ShogunTests(PluginTestCase):
         self.assertCountEqual(ainfo, [
             ArtifactInfo('Shogun Alignment Profile', 'BIOM',
                          [(pout_dir('otu_table.alignment.profile.biom'),
-                           'biom')]),
+                           'biom'),
+                          (pout_dir('alignment.bowtie2.sam.xz'), 'log')]),
             ArtifactInfo('Taxonomic Predictions - phylum', 'BIOM',
                          [(pout_dir('otu_table.redist.phylum.biom'),
                            'biom')]),
@@ -549,7 +545,8 @@ class ShogunTests(PluginTestCase):
         self.assertCountEqual(ainfo, [
             ArtifactInfo('Shogun Alignment Profile', 'BIOM',
                          [(pout_dir('otu_table.alignment.profile.biom'),
-                           'biom')]),
+                           'biom'),
+                          (pout_dir('alignment.burst.b6.xz'), 'log')]),
             ArtifactInfo('Taxonomic Predictions - phylum', 'BIOM',
                          [(pout_dir('otu_table.redist.phylum.biom'),
                            'biom')]),
@@ -605,7 +602,8 @@ class ShogunTests(PluginTestCase):
         self.assertCountEqual(ainfo, [
             ArtifactInfo('Shogun Alignment Profile', 'BIOM',
                          [(pout_dir('otu_table.alignment.profile.biom'),
-                           'biom')]),
+                           'biom'),
+                          (pout_dir('alignment.utree.tsv.xz'), 'log')]),
             ArtifactInfo('Taxonomic Predictions - phylum', 'BIOM',
                          [(pout_dir('otu_table.redist.phylum.biom'),
                            'biom')]),
