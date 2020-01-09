@@ -54,6 +54,8 @@ def generate_shogun_dflt_params():
         for aligner in ALIGNERS:
             dflt_param_set[db+'_'+aligner] = {'Database': dbs[db],
                                               'Aligner tool': aligner,
+                                              'Percent identity': 0.95,
+                                              'Capitalist': False,
                                               'Number of threads': 5}
 
     return(dflt_param_set)
