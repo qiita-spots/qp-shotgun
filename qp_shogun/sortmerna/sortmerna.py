@@ -10,7 +10,28 @@ RNA_REF_DB = (
     '{0}rRNA_databases/silva-arc-23s-id98.fasta,'
     '{0}index/silva-arc-23s-id98.idx'
 ).format(DIR)
+
 # rRNA databases used in screening
+# For testing used only one db and index
+# rRNA databases used in screening
+# RNA_REF_DB = (
+#   '{0}rRNA_databases/silva-bac-16s-id90.fasta,'
+#   '{0}index/silva-bac-16s-id90.idx:'
+#   '{0}rRNA_databases/silva-bac-23s-id98.fasta,'
+#    '{0}index/silva-bac-23s-id98.idx:'
+#    '{0}rRNA_databases/silva-arc-16s-id95.fasta,'
+#    '{0}index/silva-arc-16s-id95.idx:'
+#    '{0}rRNA_databases/silva-arc-23s-id98.fasta,'
+#    '{0}index/silva-arc-23s-id98.idx:'
+#    '{0}rRNA_databases/silva-euk-18s-id95.fasta,'
+#    '{0}index/silva-euk-18s-id95.idx:'
+#    '{0}rRNA_databases/silva-euk-28s-id98.fasta,'
+#    '{0}index/silva-euk-28s-id98.idx:'
+#    '{0}rRNA_databases/rfam-5s-database-id98.fasta,'
+#    '{0}index/rfam-5s-database-id98.idx:'
+#    '{0}rRNA_databases/rfam-5.8s-database-id98.fasta,'
+#    '{0}index/rfam-5.8s-database-id98.idx'
+# ).format(DIR)
 
 SORTMERNA_PARAMS = {
     'a': 'Number of threads'}
@@ -49,6 +70,12 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
 
     cmds = []
     # param_string = _format_params(parameters, SORTMERNA_PARAMS)
+
+    # Sortmerna 2.1 does not support processing of
+    # compressed files but they said the newest release might
+    # but that version first has to be tested before use and currently
+    # does not have MAC OS supported release
+
     threads = parameters['Number of threads']
 
     for run_prefix, sample, f_fp, r_fp in samples:

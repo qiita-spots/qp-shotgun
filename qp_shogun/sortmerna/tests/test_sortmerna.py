@@ -65,6 +65,7 @@ class QC_SortmernaTests(PluginTestCase):
             '{0}rRNA_databases/silva-arc-23s-id98.fasta,'
             '{0}index/silva-arc-23s-id98.idx'
         ).format(db_path)
+        # currently testing only one DB and its index
 
         exp_cmd = [
             ('sortmerna --ref %s --reads fastq/s1.fastq '
