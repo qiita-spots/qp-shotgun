@@ -1,6 +1,6 @@
 # rRNA removal
 
-## SortMeRNA for MetaT analysis
+## SortMeRNA for Metatranscriptomics analysis
 
 Updated  04/07/2020
 
