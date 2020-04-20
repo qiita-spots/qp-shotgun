@@ -4,7 +4,7 @@
 
 Updated  04/07/2020
 
-SortMeRNA for removal of ribsomal reads from quality filtered metaT data
+SortMeRNA for removal of ribsomal reads from quality filtered metatranscriptomics data.
 
 Latest SortMeRNA version: v2.1
 
