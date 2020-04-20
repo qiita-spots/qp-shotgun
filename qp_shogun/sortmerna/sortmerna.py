@@ -162,8 +162,8 @@ def sortmerna(qclient, job_id, parameters, out_dir):
     # reads and other for the non-ribosomal reads
     # Step 4 generating artifacts for Nonribosomal reads
 
-    msg = "Step 4 of 5: Generating artifacts "
-    "for Nonribosomal reads (%d/{0})".format(len_cmd)
+    msg = ("Step 4 of 5: Generating artifacts "
+           "for Nonribosomal reads (%d/{0})").format(len_cmd)
     suffixes = ['%s.nonribosomal.R1.fastq', '%s.nonribosomal.R2.fastq']
     prg_name = 'Sortmerna'
     file_type_name = 'Non-ribosomal reads'
