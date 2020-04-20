@@ -40,6 +40,7 @@ SORTMERNA_PARAMS = {
 def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
                                 out_dir, parameters):
     """Generates the Sortmerna commands
+    
     Parameters
     ----------
     forward_seqs : list of str
