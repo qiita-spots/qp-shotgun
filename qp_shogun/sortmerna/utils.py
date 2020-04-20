@@ -80,7 +80,7 @@ def make_read_pairs_per_sample(forward_seqs, reverse_seqs, map_file):
                 run_prefix = rp
             elif fwd_fn.startswith(rp) and run_prefix is not None:
                 raise ValueError('Multiple run prefixes match this fwd read: '
-                                 '%s' % fwd_fn)
+                                 '%s. Matches are: %s and %s' % (fwd_fn, rp, run_prefix))
 
         # make sure that we got one matching run prefix:
         if run_prefix is None:
