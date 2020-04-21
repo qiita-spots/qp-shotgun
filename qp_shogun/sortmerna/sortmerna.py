@@ -10,7 +10,8 @@
 from os.path import join
 from os import environ
 from qp_shogun.sortmerna.utils import (make_read_pairs_per_sample,
-                                       _run_commands, _per_sample_ainfo)
+                                       _run_commands, _per_sample_ainfo,
+                                       _format_params)
 
 
 DIR = environ["QC_SORTMERNA_DB_DP"]
@@ -43,9 +44,9 @@ RNA_REF_DB = (
 # ).format(DIR)
 
 SORTMERNA_PARAMS = {
-    'a': 'Number of threads',
     'blast': 'Output blast format',
-    'num_alignments': 'Number of alignments'}
+    'num_alignments': 'Number of alignments',
+    'a': 'Number of threads'}
 
 
 def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
@@ -83,32 +84,30 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
     samples = make_read_pairs_per_sample(forward_seqs, reverse_seqs, map_file)
 
     cmds = []
-    # param_string = _format_params(parameters, SORTMERNA_PARAMS)
+    param_string = _format_params(parameters, SORTMERNA_PARAMS)
 
     # Sortmerna 2.1 does not support processing of
     # compressed files but they said the newest release might
     # but that version first has to be tested before use and currently
     # does not have MAC OS supported release
 
-    threads = parameters['Number of threads']
-
     for run_prefix, sample, f_fp, r_fp in samples:
         cmds.append('sortmerna --ref %s --reads %s '
                     '--aligned %s --other %s '
-                    '--fastx --blast 1 --num_alignments 1 -a %s' % (
+                    '--fastx %s' % (
                         RNA_REF_DB, f_fp,
                         join(out_dir, '%s.ribosomal.R1' % run_prefix),
                         join(out_dir, '%s.nonribosomal.R1' % run_prefix),
-                        threads))
+                        param_string))
 
         if r_fp is not None:
             cmds.append('sortmerna --ref %s --reads %s '
                         '--aligned %s --other %s '
-                        '--fastx --blast 1 --num_alignments 1 -a %s' % (
+                        '--fastx %s' % (
                             RNA_REF_DB, r_fp,
                             join(out_dir, '%s.ribosomal.R2' % run_prefix),
                             join(out_dir, '%s.nonribosomal.R2' % run_prefix),
-                            threads))
+                            param_string))
     return cmds, samples
     # In this version I have not added a summary file or sam file
 

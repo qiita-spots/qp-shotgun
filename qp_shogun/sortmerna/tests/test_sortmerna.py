@@ -25,9 +25,9 @@ from qp_shogun.sortmerna.utils import (
 
 
 SORTMERNA_PARAMS = {
-    'a': 'Number of threads',
     'blast': 'Output blast format',
-    'num_alignments': 'Number of alignments'}
+    'num_alignments': 'Number of alignments',
+    'a': 'Number of threads'}
 
 
 class QC_SortmernaTests(PluginTestCase):
