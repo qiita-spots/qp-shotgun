@@ -55,9 +55,10 @@ class QC_SortmernaTests(PluginTestCase):
     def test_format_sortmerna_params(self):
         obs = _format_params(self.params, SORTMERNA_PARAMS)
         exp = (
+               '-a 5 '
                '--blast 1 '
-               '--num_alignments 1 '
-               '-a 5')
+               '--num_alignments 1'
+               )
         self.assertEqual(obs, exp)
 
     def test_generate_sortmerna_analysis_commands_forward_reverse(self):
