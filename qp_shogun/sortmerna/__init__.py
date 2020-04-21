@@ -15,7 +15,7 @@ __all__ = ['sortmerna']
 # Defining the Sortmerna command
 req_params = {'input': ('artifact', ['per_sample_FASTQ'])}
 opt_params = {
-    'Output blast format': ['interger', '1'],
+    'Output blast format': ['integer', '1'],
     'Number of alignments': ['integer', '1'],
     'Number of threads': ['integer', '5']
     }
