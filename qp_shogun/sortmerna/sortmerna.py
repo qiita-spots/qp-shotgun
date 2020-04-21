@@ -51,7 +51,7 @@ SORTMERNA_PARAMS = {
 def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
                                 out_dir, parameters):
     """Generates the Sortmerna commands
-    
+
     Parameters
     ----------
     forward_seqs : list of str
@@ -83,7 +83,7 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
     samples = make_read_pairs_per_sample(forward_seqs, reverse_seqs, map_file)
 
     cmds = []
-    param_string = _format_params(parameters, SORTMERNA_PARAMS)
+    # param_string = _format_params(parameters, SORTMERNA_PARAMS)
 
     # Sortmerna 2.1 does not support processing of
     # compressed files but they said the newest release might
@@ -100,7 +100,7 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
                         join(out_dir, '%s.ribosomal.R1' % run_prefix),
                         join(out_dir, '%s.nonribosomal.R1' % run_prefix),
                         threads))
-    
+
         if r_fp is not None:
             cmds.append('sortmerna --ref %s --reads %s '
                         '--aligned %s --other %s '
