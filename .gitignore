@@ -101,4 +101,4 @@ dump.rdb
 
 # OSX stuff
 .DS_Store
-qp_shogun/sortmerna/databases/.DS_Store
+**/.DS_Store
