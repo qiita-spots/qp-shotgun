@@ -9,10 +9,11 @@
 
 from os.path import join
 from os import environ
-from qp_shogun.sortmerna.utils import (make_read_pairs_per_sample,
-                                       _run_commands, _per_sample_ainfo,
-                                       _format_params)
-
+from qp_shogun.sortmerna.utils import (
+    _per_sample_ainfo)
+from qp_shogun.utils import (
+    _format_params, make_read_pairs_per_sample,
+    _run_commands)
 
 DIR = environ["QC_SORTMERNA_DB_DP"]
 

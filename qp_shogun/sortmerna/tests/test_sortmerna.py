@@ -21,8 +21,9 @@ from qp_shogun import plugin
 from qp_shogun.sortmerna.sortmerna import (
     generate_sortmerna_commands, sortmerna)
 from qp_shogun.sortmerna.utils import (
-    _per_sample_ainfo, _format_params)
-
+    _per_sample_ainfo)
+from qp_shogun.utils import (
+    _format_params)
 
 SORTMERNA_PARAMS = {
     'blast': 'Output blast format',
@@ -79,11 +80,11 @@ class QC_SortmernaTests(PluginTestCase):
             ('sortmerna --ref %s --reads fastq/s1.fastq '
              '--aligned output/s1.ribosomal.R1 '
              '--other output/s1.nonribosomal.R1 '
-             '--fastx  -a 5 --blast 1 --num_alignments 1') % rna_ref_db,
+             '--fastx -a 5 --blast 1 --num_alignments 1') % rna_ref_db,
             ('sortmerna --ref %s --reads fastq/s1.R2.fastq '
              '--aligned output/s1.ribosomal.R2 '
              '--other output/s1.nonribosomal.R2 '
-             '--fastx  -a 5 --blast 1 --num_alignments 1') % rna_ref_db
+             '--fastx -a 5 --blast 1 --num_alignments 1') % rna_ref_db
         ]
 
         exp_sample = [
