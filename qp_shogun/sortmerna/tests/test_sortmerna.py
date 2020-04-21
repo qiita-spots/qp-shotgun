@@ -79,11 +79,11 @@ class QC_SortmernaTests(PluginTestCase):
             ('sortmerna --ref %s --reads fastq/s1.fastq '
              '--aligned output/s1.ribosomal.R1 '
              '--other output/s1.nonribosomal.R1 '
-             '--fastx --blast 1 --num_alignments 1 -a 5') % rna_ref_db,
+             '--fastx  -a 5 --blast 1 --num_alignments 1') % rna_ref_db,
             ('sortmerna --ref %s --reads fastq/s1.R2.fastq '
              '--aligned output/s1.ribosomal.R2 '
              '--other output/s1.nonribosomal.R2 '
-             '--fastx --blast 1 --num_alignments 1 -a 5') % rna_ref_db
+             '--fastx  -a 5 --blast 1 --num_alignments 1') % rna_ref_db
         ]
 
         exp_sample = [
