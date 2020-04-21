@@ -44,8 +44,7 @@ def make_read_pairs_per_sample(forward_seqs, reverse_seqs, map_file):
     At this stage it is required that if reverse sequences are present that all
     samples have both a forward and a reverse sequence. However, the read
     trimming/filtering step can sometimes eliminate all reverse reads,
-    especially in low
-    coverage samples with poor overall reverse read quality.
+    especially in low coverage samples with poor overall reverse read quality.
     """
 
     # sort forward seqs
@@ -54,8 +53,8 @@ def make_read_pairs_per_sample(forward_seqs, reverse_seqs, map_file):
     # check that rev seqs are same len
     if reverse_seqs:
         if len(forward_seqs) != len(reverse_seqs):
-            raise ValueError('Your reverse and forward files are of different '
-                             'length. Forward: %s. Reverse: %s.' %
+            raise ValueError('There's a mistmatching count of forward and reverse files.'
+                             'Forward: %s. Reverse: %s.' %
                              (', '.join(forward_seqs),
                               ', '.join(reverse_seqs)))
         reverse_seqs.sort()
@@ -80,7 +79,7 @@ def make_read_pairs_per_sample(forward_seqs, reverse_seqs, map_file):
                 run_prefix = rp
             elif fwd_fn.startswith(rp) and run_prefix is not None:
                 raise ValueError('Multiple run prefixes match this fwd read: '
-                                 '%s' % fwd_fn)
+                                 '%s. Matches are: %s and %s' % (fwd_fn, rp, run_prefix))
 
         # make sure that we got one matching run prefix:
         if run_prefix is None:

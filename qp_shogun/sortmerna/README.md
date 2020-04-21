@@ -1,10 +1,10 @@
 # rRNA removal
 
-## SortMeRNA for Metatransciptome analysis
+## SortMeRNA for Metatranscriptomics analysis
 
 Updated  04/19/2020
 
-SortMeRNA for removal of ribsomal reads from quality filtered metatranscriptomic data
+SortMeRNA for removal of ribosomal reads from quality filtered metatranscriptomics data.
 
 Latest SortMeRNA version: v2.1
 
