@@ -41,7 +41,7 @@ install:
   - pip install .
   - export QC_FILTER_DB_DP=$PWD/qp_shogun/filter/databases/
   - export QC_SHOGUN_DB_DP=$PWD/qp_shogun/shogun/databases/
-  - export QC_SORTMERNA_DB_DP=$PWD/qp_shogun/sortmerna/databases/rRNA_databases
+  - export QC_SORTMERNA_DB_DP=$PWD/qp_shogun/sortmerna/databases/rRNA_databases/
   - for file in $(ls $QC_SHOGUN_DB_DP); do tar xvjf $QC_SHOGUN_DB_DP$file -C $QC_SHOGUN_DB_DP; done
   - for file in $(ls $QC_SORTMERNA_DB_DP); do tar xvjf $QC_SORTMERNA_DB_DP$file -C $QC_SORTMERNA_DB_DP; done
   # shogun is currently installing an old version of burst so let's install the correct one
