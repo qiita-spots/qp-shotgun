@@ -98,7 +98,6 @@ qp_shogun/shogun/databases/rep82/
 # Redis
 dump.rdb
 
-
 # OSX stuff
 .DS_Store
 **/.DS_Store
