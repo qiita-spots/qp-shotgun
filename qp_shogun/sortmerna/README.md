@@ -1,10 +1,10 @@
 # rRNA removal
 
-## SortMeRNA for MetaT analysis
+## SortMeRNA for Metatransciptome analysis
 
-Updated  04/07/2020
+Updated  04/19/2020
 
-SortMeRNA for removal of ribsomal reads from quality filtered metaT data
+SortMeRNA for removal of ribsomal reads from quality filtered metatranscriptomic data
 
 Latest SortMeRNA version: v2.1
 
@@ -14,7 +14,7 @@ Even if you are dealing with ribosomal RNA subtracted libraries, there will be s
 residual ribosomal RNA in the libraries that you want to remove/separate from
 the non ribosomal RNA sequences.
 
-Input: Quality filtered metaT reads (Fasta/Fastq) 
+Input: Quality filtered metatranscriptomics reads (FASTA/FASTQ) 
 
 ## Building Custom databases
 
@@ -38,13 +38,10 @@ Extract only the cluster centers
 ```./indexdb_rna --ref db.fasta,db.idx ```
 
 Multiple databases can be separated by ":"
+indexdb_rna command available as a part of SortMeRNA package.
 
 
 ## Currently indexed databases 
-
-rRNA databases are downloaded and stored at /opt/genome/qiita_dbs/sortmerna/rna-depletion/rRNA_databases. 
-
-Downloaded databases have been indexed and indexes are stored at /opt/genome/qiita_dbs/sortmerna/rna-depletion/index.
 
 rRNA from bacteria, archaea, eukarya (SILVA and rfam database)
 

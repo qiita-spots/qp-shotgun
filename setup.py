@@ -48,7 +48,8 @@ setup(name='qp-shogun',
       package_data={
         'qp_shogun': [
             'support_files/config_file.cfg',
-            'shogun/databases/*']},
+            'shogun/databases/*'],
+        'sortmerna': ['qp_shogun/sortmerna/databases/*']},
       scripts=['scripts/configure_shogun', 'scripts/start_shogun'],
       extras_require={'test': ["nose >= 0.10.1", "pep8"]},
       install_requires=['click >= 3.3', 'future', 'pandas >= 0.15',

@@ -1,3 +1,12 @@
+# -----------------------------------------------------------------------------
+# Copyright (c) 2014--, The Qiita Development Team.
+#
+# Distributed under the terms of the BSD 3-clause License.
+#
+# The full license is in the file LICENSE, distributed with this software.
+# -----------------------------------------------------------------------------
+
+
 from os.path import join
 from os import environ
 from qp_shogun.sortmerna.utils import (make_read_pairs_per_sample,
@@ -34,7 +43,9 @@ RNA_REF_DB = (
 # ).format(DIR)
 
 SORTMERNA_PARAMS = {
-    'a': 'Number of threads'}
+    'a': 'Number of threads',
+    'blast': 'Output blast format',
+    'num_alignments': 'Number of alignments'}
 
 
 def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
@@ -52,12 +63,14 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
         The job output directory
     parameters : dict
         The command's parameters, keyed by parameter name
+
     Returns
     -------
     cmds: list of str
         The Sortmerna commands
     samples: list of tup
         list of 4-tuples with run prefix, sample name, fwd read fp, rev read fp
+
     Notes
     -----
     Currently this is requiring matched pairs in the make_read_pairs_per_sample
@@ -69,7 +82,7 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
     samples = make_read_pairs_per_sample(forward_seqs, reverse_seqs, map_file)
 
     cmds = []
-    # param_string = _format_params(parameters, SORTMERNA_PARAMS)
+    param_string = _format_params(parameters, SORTMERNA_PARAMS)
 
     # Sortmerna 2.1 does not support processing of
     # compressed files but they said the newest release might
@@ -79,23 +92,15 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
     threads = parameters['Number of threads']
 
     for run_prefix, sample, f_fp, r_fp in samples:
-        if r_fp is None:
-            cmds.append('sortmerna --ref %s --reads %s '
-                        '--aligned %s --other %s '
-                        '--fastx --blast 1 --num_alignments 1 -a %s' % (
-                            RNA_REF_DB, f_fp,
-                            join(out_dir, '%s.ribosomal.R1' % run_prefix),
-                            join(out_dir, '%s.nonribosomal.R1' % run_prefix),
-                            threads))
-        else:  # there is a forward and reverese seq
-            cmds.append('sortmerna --ref %s --reads %s '
-                        '--aligned %s --other %s '
-                        '--fastx --blast 1 --num_alignments 1 -a %s' % (
-                            RNA_REF_DB, f_fp,
-                            join(out_dir, '%s.ribosomal.R1' % run_prefix),
-                            join(out_dir, '%s.nonribosomal.R1' % run_prefix),
-                            threads))
-
+        cmds.append('sortmerna --ref %s --reads %s '
+                    '--aligned %s --other %s '
+                    '--fastx --blast 1 --num_alignments 1 -a %s' % (
+                        RNA_REF_DB, f_fp,
+                        join(out_dir, '%s.ribosomal.R1' % run_prefix),
+                        join(out_dir, '%s.nonribosomal.R1' % run_prefix),
+                        threads))
+    
+        if r_fp is not None:
             cmds.append('sortmerna --ref %s --reads %s '
                         '--aligned %s --other %s '
                         '--fastx --blast 1 --num_alignments 1 -a %s' % (
@@ -109,6 +114,7 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
 
 def sortmerna(qclient, job_id, parameters, out_dir):
     """Run Sortmerna with the given parameters
+
     Parameters
     ----------
     qclient : tgp.qiita_client.QiitaClient
@@ -119,6 +125,7 @@ def sortmerna(qclient, job_id, parameters, out_dir):
         The parameter values
     out_dir : str
         The path to the job's output directory
+
     Returns
     -------
     bool, list, str
@@ -134,7 +141,6 @@ def sortmerna(qclient, job_id, parameters, out_dir):
     fps = artifact_info['files']
 
     # Get the artifact metadata
-
     prep_info = qclient.get('/qiita_db/prep_template/%s/'
                             % artifact_info['prep_information'][0])
     qiime_map = prep_info['qiime-map']

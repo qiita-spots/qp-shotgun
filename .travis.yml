@@ -13,9 +13,8 @@ before_install:
 install:
   # installing qiita environment
   - conda config --add channels anaconda
-  - travis_retry conda create -q --yes -n qiita python=3.6 pip libgfortran numpy nginx 
+  - travis_retry conda create -q --yes -n qiita python=3.6 pip libgfortran numpy nginx cython
   - source activate qiita
-  - pip install cython
   - pip install sphinx sphinx-bootstrap-theme coveralls
   - pip install https://github.com/biocore/qiita/archive/dev.zip --no-binary redbiom
   - sed 's/PORT = 7777/PORT = 6379/g' ${HOME}/miniconda3/envs/qiita/lib/python3.6/site-packages/qiita_core/support_files/config_test.cfg > config_test.cfg
@@ -43,6 +42,7 @@ install:
   - export QC_SHOGUN_DB_DP=$PWD/qp_shogun/shogun/databases/
   - export QC_SORTMERNA_DB_DP=$PWD/qp_shogun/sortmerna/databases/
   - for file in $(ls $QC_SHOGUN_DB_DP); do tar xvjf $QC_SHOGUN_DB_DP$file -C $QC_SHOGUN_DB_DP; done
+  - for file in $(ls $QC_SORTMERNA_DB_DP); do tar xvjf $QC_SORTMERNA_DB_DP$file -C $QC_SORTMERNA_DB_DP; done
   # shogun is currently installing an old version of burst so let's install the correct one
   - wget https://github.com/knights-lab/BURST/releases/download/v0.99.8/burst_linux_DB15
   - chmod 755 burst_linux_DB15

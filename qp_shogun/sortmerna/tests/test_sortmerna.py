@@ -25,7 +25,9 @@ from qp_shogun.sortmerna.utils import (
 
 
 SORTMERNA_PARAMS = {
-    'a': 'Number of threads'}
+    'a': 'Number of threads',
+    'blast': 'Output blast format',
+    'num_alignments': 'Number of alignments'}
 
 
 class QC_SortmernaTests(PluginTestCase):
@@ -33,8 +35,10 @@ class QC_SortmernaTests(PluginTestCase):
 
     def setUp(self):
         plugin("https://localhost:21174", 'register', 'ignored')
-        # db_path = os.environ["QC_SORTMERNA_DB_DP"]
+
         self.params = {
+                       'Output blast format': '1',
+                       'Number of alignments': '1',
                        'Number of threads': '5'
         }
         self._clean_up_files = []
@@ -49,7 +53,10 @@ class QC_SortmernaTests(PluginTestCase):
 
     def test_format_sortmerna_params(self):
         obs = _format_params(self.params, SORTMERNA_PARAMS)
-        exp = ('-a 5')
+        exp = (
+               '--blast 1 '
+               '--num_alignments 1 '
+               '-a 5')
         self.assertEqual(obs, exp)
 
     def test_generate_sortmerna_analysis_commands_forward_reverse(self):
@@ -95,15 +102,10 @@ class QC_SortmernaTests(PluginTestCase):
 
         fp1_1 = join(in_dir, 'kd_test_1_R1.fastq')
         fp1_2 = join(in_dir, 'kd_test_1_R2.fastq')
-        # fp2_1 = join(in_dir, 'kd_test_2_R1.fastq.gz')
-        # fp2_2 = join(in_dir, 'kd_test_2_R2.fastq.gz')
         copyfile('support_files/kd_test_1_R1.fastq', fp1_1)
         copyfile('support_files/kd_test_1_R2.fastq', fp1_2)
-        # copyfile('support_files/kd_test_1_R1.fastq.gz', fp2_1)
-        # copyfile('support_files/kd_test_1_R2.fastq.gz', fp2_2)
         # inserting new prep template
         prep_info_dict = {
-            # 'SKB7.640196': {'run_prefix': 'kd_test_1'},
             'SKB8.640193': {'run_prefix': 'kd_test_1'}
         }
         data = {'prep_info': dumps(prep_info_dict),

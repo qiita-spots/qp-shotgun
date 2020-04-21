@@ -97,3 +97,8 @@ qp_shogun/shogun/databases/rep82/
 
 # Redis
 dump.rdb
+
+
+# OSX stuff
+.DS_Store
+qp_shogun/sortmerna/databases/.DS_Store
