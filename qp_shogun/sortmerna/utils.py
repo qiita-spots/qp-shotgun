@@ -9,6 +9,7 @@
 # -----------------------------------------------------------------------------
 # This file contains functions used by multiple commands
 # -----------------------------------------------------------------------------
+
 from qiita_client.util import system_call, get_sample_names_by_run_prefix
 from itertools import zip_longest
 from os.path import basename, join, exists
@@ -53,7 +54,7 @@ def make_read_pairs_per_sample(forward_seqs, reverse_seqs, map_file):
     # check that rev seqs are same len
     if reverse_seqs:
         if len(forward_seqs) != len(reverse_seqs):
-            raise ValueError('There's a mistmatching count of forward and reverse files.'
+            raise ValueError('There is a mismatching count of forward and reverse files.'
                              'Forward: %s. Reverse: %s.' %
                              (', '.join(forward_seqs),
                               ', '.join(reverse_seqs)))
