@@ -16,8 +16,8 @@ from qp_shogun.sortmerna.utils import (make_read_pairs_per_sample,
 DIR = environ["QC_SORTMERNA_DB_DP"]
 
 RNA_REF_DB = (
-    '{0}rRNA_databases/silva-arc-23s-id98.fasta,'
-    '{0}index/silva-arc-23s-id98.idx'
+    '{0}silva-arc-23s-id98.fasta,'
+    '{0}silva-arc-23s-id98.idx'
 ).format(DIR)
 
 # rRNA databases used in screening
