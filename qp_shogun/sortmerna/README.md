@@ -35,7 +35,7 @@ Extract only the cluster centers
 
 ## Indexing custom databases
 
-```./indexdb_rna --ref db.fasta,db.idx ```
+```indexdb_rna --ref db.fasta,db.idx ```
 
 Multiple databases can be separated by ":"
 indexdb_rna command available as a part of SortMeRNA package.

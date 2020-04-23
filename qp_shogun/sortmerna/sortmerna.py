@@ -19,30 +19,23 @@ DIR = environ["QC_SORTMERNA_DB_DP"]
 
 RNA_REF_DB = (
     '{0}silva-arc-23s-id98.fasta,'
-    '{0}silva-arc-23s-id98.idx'
+    '{0}silva-arc-23s-id98.idx:'
+    '{0}silva-bac-16s-id90.fasta,'
+    '{0}silva-bac-16s-id90.idx:'
+    '{0}silva-bac-23s-id98.fasta,'
+    '{0}silva-bac-23s-id98.idx:'
+    '{0}silva-arc-16s-id95.fasta,'
+    '{0}silva-arc-16s-id95.idx:'
+    '{0}silva-euk-18s-id95.fasta,'
+    '{0}silva-euk-18s-id95.idx:'
+    '{0}silva-euk-28s-id98.fasta,'
+    '{0}silva-euk-28s-id98.idx:'
+    '{0}rfam-5s-database-id98.fasta,'
+    '{0}rfam-5s-database-id98.idx:'
+    '{0}rfam-5.8s-database-id98.fasta,'
+    '{0}rfam-5.8s-database-id98.idx'
 ).format(DIR)
 
-# rRNA databases used in screening
-# For testing used only one db and index
-# rRNA databases used in screening
-# RNA_REF_DB = (
-#   '{0}rRNA_databases/silva-bac-16s-id90.fasta,'
-#   '{0}index/silva-bac-16s-id90.idx:'
-#   '{0}rRNA_databases/silva-bac-23s-id98.fasta,'
-#    '{0}index/silva-bac-23s-id98.idx:'
-#    '{0}rRNA_databases/silva-arc-16s-id95.fasta,'
-#    '{0}index/silva-arc-16s-id95.idx:'
-#    '{0}rRNA_databases/silva-arc-23s-id98.fasta,'
-#    '{0}index/silva-arc-23s-id98.idx:'
-#    '{0}rRNA_databases/silva-euk-18s-id95.fasta,'
-#    '{0}index/silva-euk-18s-id95.idx:'
-#    '{0}rRNA_databases/silva-euk-28s-id98.fasta,'
-#    '{0}index/silva-euk-28s-id98.idx:'
-#    '{0}rRNA_databases/rfam-5s-database-id98.fasta,'
-#    '{0}index/rfam-5s-database-id98.idx:'
-#    '{0}rRNA_databases/rfam-5.8s-database-id98.fasta,'
-#    '{0}index/rfam-5.8s-database-id98.idx'
-# ).format(DIR)
 
 SORTMERNA_PARAMS = {
     'blast': 'Output blast format',

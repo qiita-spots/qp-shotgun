@@ -71,10 +71,23 @@ class QC_SortmernaTests(PluginTestCase):
         db_path = os.environ["QC_SORTMERNA_DB_DP"]
 
         rna_ref_db = (
-            '{0}silva-arc-23s-id98.fasta,'
-            '{0}silva-arc-23s-id98.idx'
+                '{0}silva-arc-23s-id98.fasta,'
+                '{0}silva-arc-23s-id98.idx:'
+                '{0}silva-bac-16s-id90.fasta,'
+                '{0}silva-bac-16s-id90.idx:'
+                '{0}silva-bac-23s-id98.fasta,'
+                '{0}silva-bac-23s-id98.idx:'
+                '{0}silva-arc-16s-id95.fasta,'
+                '{0}silva-arc-16s-id95.idx:'
+                '{0}silva-euk-18s-id95.fasta,'
+                '{0}silva-euk-18s-id95.idx:'
+                '{0}silva-euk-28s-id98.fasta,'
+                '{0}silva-euk-28s-id98.idx:'
+                '{0}rfam-5s-database-id98.fasta,'
+                '{0}rfam-5s-database-id98.idx:'
+                '{0}rfam-5.8s-database-id98.fasta,'
+                '{0}rfam-5.8s-database-id98.idx'
         ).format(db_path)
-        # currently testing only one DB and its index
         # index files take up the most space
 
         exp_cmd = [
