@@ -2,7 +2,7 @@ dist: xenial
 language: python
 sudo: false
 env:
-  - PYTHON_VERSION=3.6 COVER_PACKAGE="qp_shogun/filter qp_shogun/trim qp_shogun/shogun"
+  - PYTHON_VERSION=3.6 COVER_PACKAGE="qp_shogun/filter qp_shogun/trim qp_shogun/shogun qp_shogun/sortmerna"
 before_install:
   - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
   - chmod +x miniconda.sh
@@ -13,7 +13,8 @@ before_install:
 install:
   # installing qiita environment
   - conda config --add channels anaconda
-  - travis_retry conda create -q --yes -n qiita python=3.6 pip libgfortran numpy nginx
+  - conda config --add channels conda-forge
+  - travis_retry conda create -q --yes -n qiita python=3.6 pip libgfortran numpy nginx cython
   - source activate qiita
   - pip install sphinx sphinx-bootstrap-theme coveralls
   - pip install https://github.com/biocore/qiita/archive/dev.zip --no-binary redbiom
@@ -30,7 +31,7 @@ install:
   - conda config --add channels defaults
   - conda config --add channels bioconda
   - conda config --add channels conda-forge
-  - conda create --yes -n qp-shogun -c knights-lab shogun=1.0.7 biom-format samtools bedtools pigz
+  - conda create --yes -n qp-shogun -c knights-lab shogun=1.0.7 biom-format samtools bedtools pigz sortmerna=2.1b
   - source activate qp-shogun
   - pip install -U pip pip nose flake8
   - pip install sphinx sphinx-bootstrap-theme nose-timer codecov biopython
@@ -40,7 +41,9 @@ install:
   - pip install .
   - export QC_FILTER_DB_DP=$PWD/qp_shogun/filter/databases/
   - export QC_SHOGUN_DB_DP=$PWD/qp_shogun/shogun/databases/
+  - export QC_SORTMERNA_DB_DP=$PWD/qp_shogun/sortmerna/databases/rRNA_databases/
   - for file in $(ls $QC_SHOGUN_DB_DP); do tar xvjf $QC_SHOGUN_DB_DP$file -C $QC_SHOGUN_DB_DP; done
+  - for file in $(ls $QC_SORTMERNA_DB_DP); do tar xvjf $QC_SORTMERNA_DB_DP$file -C $QC_SORTMERNA_DB_DP; done
   # shogun is currently installing an old version of burst so let's install the correct one
   - wget https://github.com/knights-lab/BURST/releases/download/v0.99.8/burst_linux_DB15
   - chmod 755 burst_linux_DB15

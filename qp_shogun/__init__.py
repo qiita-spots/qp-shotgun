@@ -11,6 +11,7 @@ from qiita_client import QiitaPlugin
 from .trim import trim_cmd
 from .filter import filter_cmd
 from .shogun import shogun_cmd
+from .sortmerna import sortmerna_cmd
 
 
 # Initialize the plugin
@@ -20,3 +21,4 @@ plugin = QiitaPlugin(
 plugin.register_command(trim_cmd)
 plugin.register_command(filter_cmd)
 plugin.register_command(shogun_cmd)
+plugin.register_command(sortmerna_cmd)
