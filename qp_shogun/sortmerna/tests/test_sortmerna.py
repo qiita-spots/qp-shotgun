@@ -116,10 +116,10 @@ class QC_SortmernaTests(PluginTestCase):
         in_dir = mkdtemp()
         self._clean_up_files.append(in_dir)
 
-        fp1_1 = join(in_dir, 'kd_test_1_R1.fastq')
-        fp1_2 = join(in_dir, 'kd_test_1_R2.fastq')
-        copyfile('support_files/kd_test_1_R1.fastq', fp1_1)
-        copyfile('support_files/kd_test_1_R2.fastq', fp1_2)
+        fp1_1 = join(in_dir, 'kd_test_1_R1.fastq.gz')
+        fp1_2 = join(in_dir, 'kd_test_1_R2.fastq.gz')
+        copyfile('support_files/kd_test_1_R1.fastq.gz', fp1_1)
+        copyfile('support_files/kd_test_1_R2.fastq.gz', fp1_2)
         # inserting new prep template
         prep_info_dict = {
             'SKB8.640193': {'run_prefix': 'kd_test_1'}

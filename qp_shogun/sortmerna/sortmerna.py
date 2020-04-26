@@ -10,7 +10,7 @@
 from os.path import join
 from os import environ
 from qp_shogun.sortmerna.utils import (
-    _per_sample_ainfo)
+    _per_sample_ainfo, _gzip_uncompress)
 from qp_shogun.utils import (
     _format_params, make_read_pairs_per_sample,
     _run_commands)
@@ -142,9 +142,18 @@ def sortmerna(qclient, job_id, parameters, out_dir):
     # Step 2 generating command for Sortmerna
     qclient.update_job_step(job_id, "Step 2 of 4: Generating"
                                     " SortMeRNA commands")
-    rs = fps['raw_reverse_seqs'] if 'raw_reverse_seqs' in fps else []
-    commands, samples = generate_sortmerna_commands(fps['raw_forward_seqs'],
-                                                    rs, qiime_map, out_dir,
+    fs = fps['raw_forward_seqs']
+    fs_uncompressed = _gzip_uncompress(fs)
+    if 'raw_reverse_seqs' in fps:
+        rs = fps['raw_reverse_seqs']
+        rs_uncompressed = _gzip_uncompress(rs)
+    else:
+        rs_uncompressed = []
+
+    commands, samples = generate_sortmerna_commands(fs_uncompressed,
+                                                    rs_uncompressed,
+                                                    qiime_map,
+                                                    out_dir,
                                                     parameters)
 
     # Step 3 executing Sortmerna
@@ -159,8 +168,8 @@ def sortmerna(qclient, job_id, parameters, out_dir):
 
     # Generates 2 artifacts: one for the ribosomal
     # reads and other for the non-ribosomal reads
-    # Step 4 generating artifacts for Nonribosomal reads
 
+    # Step 4 generating artifacts for Nonribosomal reads
     msg = ("Step 4 of 5: Generating artifacts "
            "for Nonribosomal reads (%d/{0})").format(len_cmd)
     suffixes = ['%s.nonribosomal.R1.fastq', '%s.nonribosomal.R2.fastq']
@@ -168,6 +177,7 @@ def sortmerna(qclient, job_id, parameters, out_dir):
     file_type_name = 'Non-ribosomal reads'
     ainfo.append(_per_sample_ainfo(
         out_dir, samples, suffixes, prg_name, file_type_name, bool(rs)))
+
     # Step 5 generating artifacts for Ribosomal reads
     msg = ("Step 5 of 5: Generating artifacts "
            "for Ribosomal reads (%d/{0})").format(len_cmd)
