@@ -16,22 +16,25 @@ from functools import partial
 from qiita_client import ArtifactInfo
 
 
-def _gzip_uncompress(input_file):
-    if input_file.endswith('.fastq.gz'):
-        input_filename_uncompressed = input_file.replace(
-            '.fastq.gz', '.fastq')
-        # Uncompressing and reading the .gz file
-        input = gzip.GzipFile(input_file, 'rb')
-        s = input.read()
-        input.close()
-        # Writing uncompressed data into a file
-        output = open(input_filename_uncompressed, 'wb')
-        output.write(s)
-        output.close()
-        # Return the .fastq filename
-        return input_filename_uncompressed
-    else:
-        raise ValueError('File %s has an unexpected name' % input_file)
+def _gzip_uncompress(input_filelist):
+    input_filelist_uncompressed = []
+    for input_file in input_filelist:
+        if input_file.endswith('.fastq.gz'):
+            filename_uncompressed = input_file.replace(
+                '.fastq.gz', '.fastq')
+            # Uncompressing and reading the .gz file
+            input = gzip.GzipFile(input_file, 'rb')
+            s = input.read()
+            input.close()
+            # Writing uncompressed data into a file
+            output = open(filename_uncompressed, 'wb')
+            output.write(s)
+            output.close()
+            # Return the .fastq filename
+            input_filelist_uncompressed.append(filename_uncompressed)
+        else:
+            raise ValueError('File %s has an unexpected name' % input_file)
+    return input_filelist_uncompressed
 
 
 def _per_sample_ainfo(
