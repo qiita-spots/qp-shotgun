@@ -16,6 +16,7 @@ from functools import partial
 from qiita_client import ArtifactInfo
 
 
+# Returns a file list
 def _gzip_uncompress(input_filelist):
     input_filelist_uncompressed = []
     for input_file in input_filelist:
@@ -37,6 +38,16 @@ def _gzip_uncompress(input_filelist):
     return input_filelist_uncompressed
 
 
+def _gzip_compress(input_filename):
+    f_in = open(input_filename, 'rb')
+    output_filename = input_filename + '.gz'
+    f_out = gzip.open(output_filename, 'wb')
+    f_out.writelines(f_in)
+    f_out.close()
+    f_in.close()
+    return output_filename
+
+
 def _per_sample_ainfo(
         out_dir, samples, suffixes, prg_name,
         files_type_name, fwd_and_rev=False):
@@ -49,13 +60,17 @@ def _per_sample_ainfo(
             if exists(fname):
                 if fname.endswith('R1.fastq'):
                     ftype = 'raw_forward_seqs'
+                    # zipping output files
+                    fname_compressed = _gzip_compress(fname)
                 elif fname.endswith('R2.fastq'):
                     ftype = 'raw_reverse_seqs'
+                    # zipping output files
+                    fname_compressed = _gzip_compress(fname)
                 else:
                     # this should never happen and it's not really possible
                     # to reproduce so no tests!
                     raise ValueError('File %s has an unexpected name' % fname)
-                files.append((fname, ftype))
+                files.append((fname_compressed, ftype))
             else:
                 missing_files.append(fname)
 

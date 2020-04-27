@@ -167,10 +167,10 @@ class QC_SortmernaTests(PluginTestCase):
         od = partial(join, out_dir)
 
         exp_fps = [
-            [(od('kd_test_1.nonribosomal.R1.fastq'), 'raw_forward_seqs'),
-             (od('kd_test_1.nonribosomal.R2.fastq'), 'raw_reverse_seqs')],
-            [(od('kd_test_1.ribosomal.R1.fastq'), 'raw_forward_seqs'),
-             (od('kd_test_1.ribosomal.R2.fastq'), 'raw_reverse_seqs')]]
+            [(od('kd_test_1.nonribosomal.R1.fastq.gz'), 'raw_forward_seqs'),
+             (od('kd_test_1.nonribosomal.R2.fastq.gz'), 'raw_reverse_seqs')],
+            [(od('kd_test_1.ribosomal.R1.fastq.gz'), 'raw_forward_seqs'),
+             (od('kd_test_1.ribosomal.R2.fastq.gz'), 'raw_reverse_seqs')]]
 
         self.assertEqual(exp_fps, obs_fps)
 

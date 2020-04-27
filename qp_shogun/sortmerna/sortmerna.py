@@ -168,8 +168,8 @@ def sortmerna(qclient, job_id, parameters, out_dir):
 
     # Generates 2 artifacts: one for the ribosomal
     # reads and other for the non-ribosomal reads
-    # Step 4 generating artifacts for Nonribosomal reads
 
+    # Step 4 generating artifacts for Nonribosomal reads
     msg = ("Step 4 of 5: Generating artifacts "
            "for Nonribosomal reads (%d/{0})").format(len_cmd)
     suffixes = ['%s.nonribosomal.R1.fastq', '%s.nonribosomal.R2.fastq']
@@ -177,6 +177,7 @@ def sortmerna(qclient, job_id, parameters, out_dir):
     file_type_name = 'Non-ribosomal reads'
     ainfo.append(_per_sample_ainfo(
         out_dir, samples, suffixes, prg_name, file_type_name, bool(rs)))
+
     # Step 5 generating artifacts for Ribosomal reads
     msg = ("Step 5 of 5: Generating artifacts "
            "for Ribosomal reads (%d/{0})").format(len_cmd)
