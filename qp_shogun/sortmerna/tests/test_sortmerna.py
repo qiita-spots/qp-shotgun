@@ -26,7 +26,8 @@ from qp_shogun.utils import (
 SORTMERNA_PARAMS = {
     'blast': 'Output blast format',
     'num_alignments': 'Number of alignments',
-    'a': 'Number of threads'}
+    'a': 'Number of threads',
+    'm': 'Memory'}
 
 
 class QC_SortmernaTests(PluginTestCase):
@@ -97,10 +98,10 @@ class QC_SortmernaTests(PluginTestCase):
              '--aligned output/s1.ribosomal.R1 '
              '--other output/s1.nonribosomal.R1 '
              '--fastx -a 5 --blast 1 -m 32768 --num_alignments 1; '
-             
+
              'pigz -p 5 -c output/s1.ribosomal.R1 > '
              'output/s1.ribosomal.R1.gz; '
-             
+
              'pigz -p 5 -c output/s1.nonribosomal.R1 > '
              'output/s1.nonribosomal.R1.gz;') % rna_ref_db,
             ('unpigz -p 5 -c fastq/s1.R2.fastq.gz > fastq/s1.R2.fastq; '
@@ -108,11 +109,11 @@ class QC_SortmernaTests(PluginTestCase):
              'sortmerna --ref %s --reads fastq/s1.R2.fastq '
              '--aligned output/s1.ribosomal.R2 '
              '--other output/s1.nonribosomal.R2 '
-             '--fastx -a 5 --blast 1 -m 32768 --num_alignments 1'
-             
+             '--fastx -a 5 --blast 1 -m 32768 --num_alignments 1; '
+
              'pigz -p 5 -c output/s1.ribosomal.R2 > '
              'output/s1.ribosomal.R2.gz; '
-             
+
              'pigz -p 5 -c output/s1.nonribosomal.R2 > '
              'output/s1.nonribosomal.R2.gz;') % rna_ref_db
         ]
