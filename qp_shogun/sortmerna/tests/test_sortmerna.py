@@ -20,10 +20,8 @@ from qiita_client.testing import PluginTestCase
 from qp_shogun import plugin
 from qp_shogun.sortmerna.sortmerna import (
     generate_sortmerna_commands, sortmerna)
-from qp_shogun.sortmerna.utils import (
-    _per_sample_ainfo)
 from qp_shogun.utils import (
-    _format_params)
+    _format_params, _per_sample_ainfo)
 
 SORTMERNA_PARAMS = {
     'blast': 'Output blast format',
@@ -91,14 +89,30 @@ class QC_SortmernaTests(PluginTestCase):
         # index files take up the most space
 
         exp_cmd = [
-            ('sortmerna --ref %s --reads fastq/s1.fastq '
+            ('unpigz -p 5 -c fastq/s1.fastq.gz > fastq/s1.fastq; '
+
+             'sortmerna --ref %s --reads fastq/s1.fastq '
              '--aligned output/s1.ribosomal.R1 '
              '--other output/s1.nonribosomal.R1 '
-             '--fastx -a 5 --blast 1 --num_alignments 1') % rna_ref_db,
-            ('sortmerna --ref %s --reads fastq/s1.R2.fastq '
+             '--fastx -a 5 --blast 1 --num_alignments 1; '
+             
+             'pigz -p 5 -c output/s1.ribosomal.R1 > '
+             'output/s1.ribosomal.R1.gz; '
+             
+             'pigz -p 5 -c output/s1.nonribosomal.R1 > '
+             'output/s1.nonribosomal.R1.gz;') % rna_ref_db,
+            ('unpigz -p 5 -c fastq/s1.R2.fastq.gz > fastq/s1.R2.fastq; '
+
+             'sortmerna --ref %s --reads fastq/s1.R2.fastq '
              '--aligned output/s1.ribosomal.R2 '
              '--other output/s1.nonribosomal.R2 '
-             '--fastx -a 5 --blast 1 --num_alignments 1') % rna_ref_db
+             '--fastx -a 5 --blast 1 --num_alignments 1'
+             
+             'pigz -p 5 -c output/s1.ribosomal.R2 > '
+             'output/s1.ribosomal.R2.gz; '
+             
+             'pigz -p 5 -c output/s1.nonribosomal.R2 > '
+             'output/s1.nonribosomal.R2.gz;') % rna_ref_db
         ]
 
         exp_sample = [
