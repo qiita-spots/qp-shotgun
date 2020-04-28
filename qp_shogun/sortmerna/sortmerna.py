@@ -38,7 +38,8 @@ RNA_REF_DB = (
 SORTMERNA_PARAMS = {
     'blast': 'Output blast format',
     'num_alignments': 'Number of alignments',
-    'a': 'Number of threads'}
+    'a': 'Number of threads',
+    'm': 'Memory'}
 
 
 def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,

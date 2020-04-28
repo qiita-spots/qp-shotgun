@@ -17,7 +17,8 @@ req_params = {'input': ('artifact', ['per_sample_FASTQ'])}
 opt_params = {
     'Output blast format': ['integer', '1'],
     'Number of alignments': ['integer', '1'],
-    'Number of threads': ['integer', '5']
+    'Number of threads': ['integer', '5'],
+    'Memory': ['integer', '32768']
     }
 outputs = {'Non-ribosomal reads': 'per_sample_FASTQ',
            'Ribosomal reads': 'per_sample_FASTQ'}
