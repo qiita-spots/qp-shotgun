@@ -107,10 +107,10 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
                                 out_dir, '%s.nonribosomal.R1' %
                                 run_prefix),
                             smr_r_op_gz=join(
-                                out_dir, '%s.ribosomal.R1.gz' %
+                                out_dir, '%s.ribosomal.R1.fastq.gz' %
                                 run_prefix),
                             smr_nr_op_gz=join(
-                                out_dir, '%s.nonribosomal.R1.gz' %
+                                out_dir, '%s.nonribosomal.R1.fastq.gz' %
                                 run_prefix)
                             ))
 
@@ -138,10 +138,10 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
                                     out_dir, '%s.nonribosomal.R2' %
                                     run_prefix),
                                 smr_r_op_gz=join(
-                                    out_dir, '%s.ribosomal.R2.gz' %
+                                    out_dir, '%s.ribosomal.R2.fastq.gz' %
                                     run_prefix),
                                 smr_nr_op_gz=join(
-                                    out_dir, '%s.nonribosomal.R2.gz' %
+                                    out_dir, '%s.nonribosomal.R2.fastq.gz' %
                                     run_prefix)
                                 ))
 
