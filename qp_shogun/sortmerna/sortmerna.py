@@ -81,7 +81,7 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
     threads = parameters['Number of threads']
 
     # Sortmerna 2.1 does not support direct processing of
-    # compressed files
+    # compressed files currently
 
     for run_prefix, sample, f_fp, r_fp in samples:
         cmds.append('unpigz -p {thrds} -c {fwd_ip} > {fwd_ip_unpigz}; '
