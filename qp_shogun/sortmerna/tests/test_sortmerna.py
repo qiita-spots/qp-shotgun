@@ -119,10 +119,10 @@ class QC_SortmernaTests(PluginTestCase):
         ]
 
         exp_sample = [
-            ('s1', 'SKB8.640193', 'fastq/s1.fastq', 'fastq/s1.R2.fastq')
+            ('s1', 'SKB8.640193', 'fastq/s1.fastq.gz', 'fastq/s1.R2.fastq.gz')
             ]
         obs_cmd, obs_sample = generate_sortmerna_commands(
-            ['fastq/s1.fastq'], ['fastq/s1.R2.fastq'],
+            ['fastq/s1.fastq.gz'], ['fastq/s1.R2.fastq.gz'],
             fp, 'output', self.params)
 
         self.assertEqual(obs_cmd, exp_cmd)
