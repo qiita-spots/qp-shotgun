@@ -125,7 +125,8 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
 
                         'pigz -p {thrds} -c {smr_r_op}.fastq > {smr_r_op_gz}; '
 
-                        'pigz -p {thrds} -c {smr_nr_op}.fastq > {smr_nr_op_gz};'
+                        'pigz -p {thrds} -c {smr_nr_op}.fastq > '
+                        '{smr_nr_op_gz};'
 
                         .format(params=param_string,
                                 thrds=threads,
