@@ -39,7 +39,7 @@ class QC_SortmernaTests(PluginTestCase):
         self.params = {
                        'Output blast format': '1',
                        'Number of alignments': '1',
-                       'Memory': '30720',
+                       'Memory': '29696',
                        'Number of threads': '5'
         }
         self._clean_up_files = []
