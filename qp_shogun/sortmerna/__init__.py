@@ -18,7 +18,7 @@ opt_params = {
     'Output blast format': ['integer', '1'],
     'Number of alignments': ['integer', '1'],
     'Number of threads': ['integer', '5'],
-    'Memory': ['integer', '32768']
+    'Memory': ['integer', '8192']
     }
 outputs = {'Non-ribosomal reads': 'per_sample_FASTQ',
            'Ribosomal reads': 'per_sample_FASTQ'}
