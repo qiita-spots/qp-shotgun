@@ -57,7 +57,7 @@ class QC_SortmernaTests(PluginTestCase):
         exp = (
                '-a 5 '
                '--blast 1 '
-               '-m 29696'
+               '-m 29696 '
                '--num_alignments 1'
                )
         self.assertEqual(obs, exp)
@@ -97,7 +97,7 @@ class QC_SortmernaTests(PluginTestCase):
              'sortmerna --ref %s --reads fastq/s1.fastq '
              '--aligned output/s1.ribosomal.R1 '
              '--other output/s1.nonribosomal.R1 '
-             '--fastx -a 5 --blast 1 -m 29696--num_alignments 1; '
+             '--fastx -a 5 --blast 1 -m 29696 --num_alignments 1; '
 
              'pigz -p 5 -c output/s1.ribosomal.R1.fastq > '
              'output/s1.ribosomal.R1.fastq.gz; '
@@ -109,7 +109,7 @@ class QC_SortmernaTests(PluginTestCase):
              'sortmerna --ref %s --reads fastq/s1.R2.fastq '
              '--aligned output/s1.ribosomal.R2 '
              '--other output/s1.nonribosomal.R2 '
-             '--fastx -a 5 --blast 1 -m 29696--num_alignments 1; '
+             '--fastx -a 5 --blast 1 -m 29696 --num_alignments 1; '
 
              'pigz -p 5 -c output/s1.ribosomal.R2.fastq > '
              'output/s1.ribosomal.R2.fastq.gz; '
