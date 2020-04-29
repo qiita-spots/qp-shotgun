@@ -101,10 +101,10 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
                                 '.fastq.gz', '.fastq'),
                             ref_db=RNA_REF_DB,
                             smr_r_op=join(
-                                out_dir, '%s.ribosomal.R1.fastq' %
+                                out_dir, '%s.ribosomal.R1' %
                                 run_prefix),
                             smr_nr_op=join(
-                                out_dir, '%s.nonribosomal.R1.fastq' %
+                                out_dir, '%s.nonribosomal.R1' %
                                 run_prefix),
                             smr_r_op_gz=join(
                                 out_dir, '%s.ribosomal.R1.fastq.gz' %
@@ -132,10 +132,10 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
                                     '.fastq.gz', '.fastq'),
                                 ref_db=RNA_REF_DB,
                                 smr_r_op=join(
-                                    out_dir, '%s.ribosomal.R2.fastq' %
+                                    out_dir, '%s.ribosomal.R2' %
                                     run_prefix),
                                 smr_nr_op=join(
-                                    out_dir, '%s.nonribosomal.R2.fastq' %
+                                    out_dir, '%s.nonribosomal.R2' %
                                     run_prefix),
                                 smr_r_op_gz=join(
                                     out_dir, '%s.ribosomal.R2.fastq.gz' %
