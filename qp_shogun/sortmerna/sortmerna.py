@@ -82,6 +82,8 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
 
     # Sortmerna 2.1 does not support direct processing of
     # compressed files currently
+    # note SMR auto-detects file type and adds .fastq extension
+    # to the generated output files
 
     for run_prefix, sample, f_fp, r_fp in samples:
         cmds.append('unpigz -p {thrds} -c {fwd_ip} > {fwd_ip_unpigz}; '
@@ -90,9 +92,9 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
                     '--aligned {smr_r_op} --other {smr_nr_op} '
                     '--fastx {params}; '
 
-                    'pigz -p {thrds} -c {smr_r_op} > {smr_r_op_gz}; '
+                    'pigz -p {thrds} -c {smr_r_op}.fastq > {smr_r_op_gz}; '
 
-                    'pigz -p {thrds} -c {smr_nr_op} > {smr_nr_op_gz};'
+                    'pigz -p {thrds} -c {smr_nr_op}.fastq > {smr_nr_op_gz};'
 
                     .format(params=param_string,
                             thrds=threads,
@@ -121,9 +123,9 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
                         '--aligned {smr_r_op} --other {smr_nr_op} '
                         '--fastx {params}; '
 
-                        'pigz -p {thrds} -c {smr_r_op} > {smr_r_op_gz}; '
+                        'pigz -p {thrds} -c {smr_r_op}.fastq > {smr_r_op_gz}; '
 
-                        'pigz -p {thrds} -c {smr_nr_op} > {smr_nr_op_gz};'
+                        'pigz -p {thrds} -c {smr_nr_op}.fastq > {smr_nr_op_gz};'
 
                         .format(params=param_string,
                                 thrds=threads,
