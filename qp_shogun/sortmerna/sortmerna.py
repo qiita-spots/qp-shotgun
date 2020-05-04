@@ -86,11 +86,11 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
     # to the generated output files
 
     for run_prefix, sample, f_fp, r_fp in samples:
-        cmds.append('unpigz -p {thrds} -c {fwd_ip} > {fwd_ip_unpigz}; '
+        cmds.append('unpigz -p {thrds} -c {fwd_ip} > {fwd_ip_unpigz} && '
 
                     'sortmerna --ref {ref_db} --reads {fwd_ip_unpigz} '
                     '--aligned {smr_r_op} --other {smr_nr_op} '
-                    '--fastx {params}; '
+                    '--fastx {params} && '
 
                     'pigz -p {thrds} -c {smr_r_op}.fastq > {smr_r_op_gz}; '
 
