@@ -100,7 +100,7 @@ class QC_SortmernaTests(PluginTestCase):
              '--fastx -a 5 --blast 1 -m 29696 --num_alignments 1 && '
 
              'pigz -p 5 -c output/s1.ribosomal.R1.fastq > '
-             'output/s1.ribosomal.R1.fastq.gz; '
+             'output/s1.ribosomal.R1.fastq.gz && '
 
              'pigz -p 5 -c output/s1.nonribosomal.R1.fastq > '
              'output/s1.nonribosomal.R1.fastq.gz;') % rna_ref_db,
@@ -112,7 +112,7 @@ class QC_SortmernaTests(PluginTestCase):
              '--fastx -a 5 --blast 1 -m 29696 --num_alignments 1 && '
 
              'pigz -p 5 -c output/s1.ribosomal.R2.fastq > '
-             'output/s1.ribosomal.R2.fastq.gz; '
+             'output/s1.ribosomal.R2.fastq.gz && '
 
              'pigz -p 5 -c output/s1.nonribosomal.R2.fastq > '
              'output/s1.nonribosomal.R2.fastq.gz;') % rna_ref_db

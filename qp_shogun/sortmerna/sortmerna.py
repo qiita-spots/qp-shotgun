@@ -92,7 +92,7 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
                     '--aligned {smr_r_op} --other {smr_nr_op} '
                     '--fastx {params} && '
 
-                    'pigz -p {thrds} -c {smr_r_op}.fastq > {smr_r_op_gz}; '
+                    'pigz -p {thrds} -c {smr_r_op}.fastq > {smr_r_op_gz} && '
 
                     'pigz -p {thrds} -c {smr_nr_op}.fastq > {smr_nr_op_gz};'
 
@@ -117,13 +117,14 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
                             ))
 
         if r_fp is not None:
-            cmds.append('unpigz -p {thrds} -c {rev_ip} > {rev_ip_unpigz}; '
+            cmds.append('unpigz -p {thrds} -c {rev_ip} > {rev_ip_unpigz} && '
 
                         'sortmerna --ref {ref_db} --reads {rev_ip_unpigz} '
                         '--aligned {smr_r_op} --other {smr_nr_op} '
-                        '--fastx {params}; '
+                        '--fastx {params} && '
 
-                        'pigz -p {thrds} -c {smr_r_op}.fastq > {smr_r_op_gz}; '
+                        'pigz -p {thrds} -c {smr_r_op}.fastq > '
+                        '{smr_r_op_gz} && '
 
                         'pigz -p {thrds} -c {smr_nr_op}.fastq > '
                         '{smr_nr_op_gz};'
