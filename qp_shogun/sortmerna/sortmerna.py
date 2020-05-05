@@ -110,8 +110,8 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
                 % (index + 1)
             arguments['smr_nr_op'] = prefix_path + '.nonribosomal.R%d'\
                 % (index + 1)
-            arguments['smr_r_op_gz'] = arguments['smr_r_op'] + '.gz'
-            arguments['smr_nr_op_gz'] = arguments['smr_nr_op'] + '.gz'
+            arguments['smr_r_op_gz'] = arguments['smr_r_op'] + '.fastq.gz'
+            arguments['smr_nr_op_gz'] = arguments['smr_nr_op'] + '.fastq.gz'
 
             cmds.append(template.format(**arguments))
 
