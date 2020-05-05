@@ -9,11 +9,9 @@
 
 from os.path import join
 from os import environ
-from qp_shogun.sortmerna.utils import (
-    _per_sample_ainfo)
 from qp_shogun.utils import (
     _format_params, make_read_pairs_per_sample,
-    _run_commands)
+    _run_commands, _per_sample_ainfo)
 
 DIR = environ["QC_SORTMERNA_DB_DP"]
 
@@ -40,7 +38,8 @@ RNA_REF_DB = (
 SORTMERNA_PARAMS = {
     'blast': 'Output blast format',
     'num_alignments': 'Number of alignments',
-    'a': 'Number of threads'}
+    'a': 'Number of threads',
+    'm': 'Memory'}
 
 
 def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
@@ -79,29 +78,43 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
 
     cmds = []
     param_string = _format_params(parameters, SORTMERNA_PARAMS)
+    threads = parameters['Number of threads']
 
-    # Sortmerna 2.1 does not support processing of
-    # compressed files but they said the newest release might
-    # but that version first has to be tested before use and currently
-    # does not have MAC OS supported release
+    # Sortmerna 2.1 does not support direct processing of
+    # compressed files currently
+    # note SMR auto-detects file type and adds .fastq extension
+    # to the generated output files
+
+    template = ("unpigz -p {thrds} -c {ip} > {ip_unpigz} && "
+                "sortmerna --ref {ref_db} --reads {ip_unpigz} "
+                "--aligned {smr_r_op} --other {smr_nr_op} "
+                "--fastx {params} && "
+                "pigz -p {thrds} -c {smr_r_op}.fastq > {smr_r_op_gz} && "
+                "pigz -p {thrds} -c {smr_nr_op}.fastq > {smr_nr_op_gz};"
+                )
+
+    arguments = {'thrds': threads,
+                 'ref_db': RNA_REF_DB, 'params': param_string}
 
     for run_prefix, sample, f_fp, r_fp in samples:
-        cmds.append('sortmerna --ref %s --reads %s '
-                    '--aligned %s --other %s '
-                    '--fastx %s' % (
-                        RNA_REF_DB, f_fp,
-                        join(out_dir, '%s.ribosomal.R1' % run_prefix),
-                        join(out_dir, '%s.nonribosomal.R1' % run_prefix),
-                        param_string))
+        prefix_path = join(out_dir, run_prefix)
 
-        if r_fp is not None:
-            cmds.append('sortmerna --ref %s --reads %s '
-                        '--aligned %s --other %s '
-                        '--fastx %s' % (
-                            RNA_REF_DB, r_fp,
-                            join(out_dir, '%s.ribosomal.R2' % run_prefix),
-                            join(out_dir, '%s.nonribosomal.R2' % run_prefix),
-                            param_string))
+        for index, fp in enumerate([f_fp, r_fp]):
+            # if reverse filepath is not present ignore it
+            if fp is None:
+                continue
+
+            arguments['ip'] = fp
+            arguments['ip_unpigz'] = fp.replace('.fastq.gz', '.fastq')
+            arguments['smr_r_op'] = prefix_path + '.ribosomal.R%d'\
+                % (index + 1)
+            arguments['smr_nr_op'] = prefix_path + '.nonribosomal.R%d'\
+                % (index + 1)
+            arguments['smr_r_op_gz'] = arguments['smr_r_op'] + '.fastq.gz'
+            arguments['smr_nr_op_gz'] = arguments['smr_nr_op'] + '.fastq.gz'
+
+            cmds.append(template.format(**arguments))
+
     return cmds, samples
     # In this version I have not added a summary file or sam file
 
@@ -143,9 +156,10 @@ def sortmerna(qclient, job_id, parameters, out_dir):
     qclient.update_job_step(job_id, "Step 2 of 4: Generating"
                                     " SortMeRNA commands")
     rs = fps['raw_reverse_seqs'] if 'raw_reverse_seqs' in fps else []
-    commands, samples = generate_sortmerna_commands(fps['raw_forward_seqs'],
-                                                    rs, qiime_map, out_dir,
-                                                    parameters)
+    commands, samples = generate_sortmerna_commands(
+                                                fps['raw_forward_seqs'],
+                                                rs, qiime_map, out_dir,
+                                                parameters)
 
     # Step 3 executing Sortmerna
     len_cmd = len(commands)
@@ -159,20 +173,21 @@ def sortmerna(qclient, job_id, parameters, out_dir):
 
     # Generates 2 artifacts: one for the ribosomal
     # reads and other for the non-ribosomal reads
-    # Step 4 generating artifacts for Nonribosomal reads
 
+    # Step 4 generating artifacts for Nonribosomal reads
     msg = ("Step 4 of 5: Generating artifacts "
            "for Nonribosomal reads (%d/{0})").format(len_cmd)
-    suffixes = ['%s.nonribosomal.R1.fastq', '%s.nonribosomal.R2.fastq']
+    suffixes = ['%s.nonribosomal.R1.fastq.gz', '%s.nonribosomal.R2.fastq.gz']
     prg_name = 'Sortmerna'
     file_type_name = 'Non-ribosomal reads'
     ainfo.append(_per_sample_ainfo(
         out_dir, samples, suffixes, prg_name, file_type_name, bool(rs)))
+
     # Step 5 generating artifacts for Ribosomal reads
     msg = ("Step 5 of 5: Generating artifacts "
            "for Ribosomal reads (%d/{0})").format(len_cmd)
 
-    suffixes = ['%s.ribosomal.R1.fastq', '%s.ribosomal.R2.fastq']
+    suffixes = ['%s.ribosomal.R1.fastq.gz', '%s.ribosomal.R2.fastq.gz']
     prg_name = 'Sortmerna'
     file_type_name = 'Ribosomal reads'
     ainfo.append(_per_sample_ainfo(

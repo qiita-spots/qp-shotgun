@@ -20,15 +20,14 @@ from qiita_client.testing import PluginTestCase
 from qp_shogun import plugin
 from qp_shogun.sortmerna.sortmerna import (
     generate_sortmerna_commands, sortmerna)
-from qp_shogun.sortmerna.utils import (
-    _per_sample_ainfo)
 from qp_shogun.utils import (
-    _format_params)
+    _format_params, _per_sample_ainfo)
 
 SORTMERNA_PARAMS = {
     'blast': 'Output blast format',
     'num_alignments': 'Number of alignments',
-    'a': 'Number of threads'}
+    'a': 'Number of threads',
+    'm': 'Memory'}
 
 
 class QC_SortmernaTests(PluginTestCase):
@@ -40,6 +39,7 @@ class QC_SortmernaTests(PluginTestCase):
         self.params = {
                        'Output blast format': '1',
                        'Number of alignments': '1',
+                       'Memory': '3988',
                        'Number of threads': '5'
         }
         self._clean_up_files = []
@@ -57,6 +57,7 @@ class QC_SortmernaTests(PluginTestCase):
         exp = (
                '-a 5 '
                '--blast 1 '
+               '-m 3988 '
                '--num_alignments 1'
                )
         self.assertEqual(obs, exp)
@@ -91,21 +92,37 @@ class QC_SortmernaTests(PluginTestCase):
         # index files take up the most space
 
         exp_cmd = [
-            ('sortmerna --ref %s --reads fastq/s1.fastq '
+            ('unpigz -p 5 -c fastq/s1.fastq.gz > fastq/s1.fastq && '
+
+             'sortmerna --ref %s --reads fastq/s1.fastq '
              '--aligned output/s1.ribosomal.R1 '
              '--other output/s1.nonribosomal.R1 '
-             '--fastx -a 5 --blast 1 --num_alignments 1') % rna_ref_db,
-            ('sortmerna --ref %s --reads fastq/s1.R2.fastq '
+             '--fastx -a 5 --blast 1 -m 3988 --num_alignments 1 && '
+
+             'pigz -p 5 -c output/s1.ribosomal.R1.fastq > '
+             'output/s1.ribosomal.R1.fastq.gz && '
+
+             'pigz -p 5 -c output/s1.nonribosomal.R1.fastq > '
+             'output/s1.nonribosomal.R1.fastq.gz;') % rna_ref_db,
+            ('unpigz -p 5 -c fastq/s1.R2.fastq.gz > fastq/s1.R2.fastq && '
+
+             'sortmerna --ref %s --reads fastq/s1.R2.fastq '
              '--aligned output/s1.ribosomal.R2 '
              '--other output/s1.nonribosomal.R2 '
-             '--fastx -a 5 --blast 1 --num_alignments 1') % rna_ref_db
+             '--fastx -a 5 --blast 1 -m 3988 --num_alignments 1 && '
+
+             'pigz -p 5 -c output/s1.ribosomal.R2.fastq > '
+             'output/s1.ribosomal.R2.fastq.gz && '
+
+             'pigz -p 5 -c output/s1.nonribosomal.R2.fastq > '
+             'output/s1.nonribosomal.R2.fastq.gz;') % rna_ref_db
         ]
 
         exp_sample = [
-            ('s1', 'SKB8.640193', 'fastq/s1.fastq', 'fastq/s1.R2.fastq')
+            ('s1', 'SKB8.640193', 'fastq/s1.fastq.gz', 'fastq/s1.R2.fastq.gz')
             ]
         obs_cmd, obs_sample = generate_sortmerna_commands(
-            ['fastq/s1.fastq'], ['fastq/s1.R2.fastq'],
+            ['fastq/s1.fastq.gz'], ['fastq/s1.R2.fastq.gz'],
             fp, 'output', self.params)
 
         self.assertEqual(obs_cmd, exp_cmd)
@@ -116,10 +133,10 @@ class QC_SortmernaTests(PluginTestCase):
         in_dir = mkdtemp()
         self._clean_up_files.append(in_dir)
 
-        fp1_1 = join(in_dir, 'kd_test_1_R1.fastq')
-        fp1_2 = join(in_dir, 'kd_test_1_R2.fastq')
-        copyfile('support_files/kd_test_1_R1.fastq', fp1_1)
-        copyfile('support_files/kd_test_1_R2.fastq', fp1_2)
+        fp1_1 = join(in_dir, 'kd_test_1_R1.fastq.gz')
+        fp1_2 = join(in_dir, 'kd_test_1_R2.fastq.gz')
+        copyfile('support_files/kd_test_1_R1.fastq.gz', fp1_1)
+        copyfile('support_files/kd_test_1_R2.fastq.gz', fp1_2)
         # inserting new prep template
         prep_info_dict = {
             'SKB8.640193': {'run_prefix': 'kd_test_1'}
@@ -167,10 +184,10 @@ class QC_SortmernaTests(PluginTestCase):
         od = partial(join, out_dir)
 
         exp_fps = [
-            [(od('kd_test_1.nonribosomal.R1.fastq'), 'raw_forward_seqs'),
-             (od('kd_test_1.nonribosomal.R2.fastq'), 'raw_reverse_seqs')],
-            [(od('kd_test_1.ribosomal.R1.fastq'), 'raw_forward_seqs'),
-             (od('kd_test_1.ribosomal.R2.fastq'), 'raw_reverse_seqs')]]
+            [(od('kd_test_1.nonribosomal.R1.fastq.gz'), 'raw_forward_seqs'),
+             (od('kd_test_1.nonribosomal.R2.fastq.gz'), 'raw_reverse_seqs')],
+            [(od('kd_test_1.ribosomal.R1.fastq.gz'), 'raw_forward_seqs'),
+             (od('kd_test_1.ribosomal.R2.fastq.gz'), 'raw_reverse_seqs')]]
 
         self.assertEqual(exp_fps, obs_fps)
 

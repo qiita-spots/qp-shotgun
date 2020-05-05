@@ -67,7 +67,7 @@ ftp://ftp.ebi.ac.uk/pub/databases/Rfam
 
 ## Usage 
 
-```sortmerna --ref $DB --reads $IN --aligned $RR --other $NR --paired_out --log --sam --fastx --blast 1 --num_alignments 1 -a 16```
+```sortmerna --ref $DB --reads $IN --aligned $RR --other $NR --paired_out --log --sam --fastx --blast 1 --num_alignments 1 -m 4096 -a 16```
 
 ## Description 
 
@@ -75,7 +75,7 @@ ftp://ftp.ebi.ac.uk/pub/databases/Rfam
 
 Path to where databases and their indexes are stored
 
-```IN="/home/janedoe/data/DB/Test.CoupledReads.fa" ```
+```IN="/home/janedoe/data/DB/Test.fastq" ```
 
 Input file, FASTA/FASTQ reads file, in this case interleaved fasta file
 
@@ -105,6 +105,8 @@ Reference database(s) and their corresponding indexes separated by "," and multi
 **--other**   rejected reads filepath + base file name (in this case, Non-ribosomal reads)
 
 **--fastx**   output FASTA/FASTQ file
+
+**-m**    Mbytes for loading reads into memory (default 1024)
 
 **--num_alignments**  reports only the first n alignments per read reaching E-value 
 
