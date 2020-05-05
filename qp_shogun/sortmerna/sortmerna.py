@@ -100,7 +100,7 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
         prefix_path = join(out_dir, run_prefix)
 
         for index, fp in enumerate([f_fp, r_fp]):
-            # if the reverse filepath is not present ignore it
+            # if reverse filepath is not present ignore it
             if fp is None:
                 continue
 
