@@ -85,69 +85,35 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
     # note SMR auto-detects file type and adds .fastq extension
     # to the generated output files
 
+    template = ("unpigz -p {thrds} -c {ip} > {ip_unpigz} && "
+                "sortmerna --ref {ref_db} --reads {ip_unpigz} "
+                "--aligned {smr_r_op} --other {smr_nr_op} "
+                "--fastx {params} && "
+                "pigz -p {thrds} -c {smr_r_op}.fastq > {smr_r_op_gz} && "
+                "pigz -p {thrds} -c {smr_nr_op}.fastq > {smr_nr_op_gz};"
+                )
+
+    arguments = {'thrds': threads,
+                 'ref_db': RNA_REF_DB, 'params': param_string}
+
     for run_prefix, sample, f_fp, r_fp in samples:
-        cmds.append('unpigz -p {thrds} -c {fwd_ip} > {fwd_ip_unpigz} && '
+        prefix_path = join(out_dir, run_prefix)
 
-                    'sortmerna --ref {ref_db} --reads {fwd_ip_unpigz} '
-                    '--aligned {smr_r_op} --other {smr_nr_op} '
-                    '--fastx {params} && '
+        for index, fp in enumerate([f_fp, r_fp]):
+            # if the reverse filepath is not present ignore it
+            if fp is None:
+                continue
 
-                    'pigz -p {thrds} -c {smr_r_op}.fastq > {smr_r_op_gz} && '
+            arguments['ip'] = fp
+            arguments['ip_unpigz'] = fp.replace('.fastq.gz', '.fastq')
+            arguments['smr_r_op'] = prefix_path + '.ribosomal.R%d'\
+                % (index + 1)
+            arguments['smr_nr_op'] = prefix_path + '.nonribosomal.R%d'\
+                % (index + 1)
+            arguments['smr_r_op_gz'] = arguments['smr_r_op'] + '.gz'
+            arguments['smr_nr_op_gz'] = arguments['smr_nr_op'] + '.gz'
 
-                    'pigz -p {thrds} -c {smr_nr_op}.fastq > {smr_nr_op_gz};'
-
-                    .format(params=param_string,
-                            thrds=threads,
-                            fwd_ip=f_fp,
-                            fwd_ip_unpigz=f_fp.replace(
-                                '.fastq.gz', '.fastq'),
-                            ref_db=RNA_REF_DB,
-                            smr_r_op=join(
-                                out_dir, '%s.ribosomal.R1' %
-                                run_prefix),
-                            smr_nr_op=join(
-                                out_dir, '%s.nonribosomal.R1' %
-                                run_prefix),
-                            smr_r_op_gz=join(
-                                out_dir, '%s.ribosomal.R1.fastq.gz' %
-                                run_prefix),
-                            smr_nr_op_gz=join(
-                                out_dir, '%s.nonribosomal.R1.fastq.gz' %
-                                run_prefix)
-                            ))
-
-        if r_fp is not None:
-            cmds.append('unpigz -p {thrds} -c {rev_ip} > {rev_ip_unpigz} && '
-
-                        'sortmerna --ref {ref_db} --reads {rev_ip_unpigz} '
-                        '--aligned {smr_r_op} --other {smr_nr_op} '
-                        '--fastx {params} && '
-
-                        'pigz -p {thrds} -c {smr_r_op}.fastq > '
-                        '{smr_r_op_gz} && '
-
-                        'pigz -p {thrds} -c {smr_nr_op}.fastq > '
-                        '{smr_nr_op_gz};'
-
-                        .format(params=param_string,
-                                thrds=threads,
-                                rev_ip=r_fp,
-                                rev_ip_unpigz=r_fp.replace(
-                                    '.fastq.gz', '.fastq'),
-                                ref_db=RNA_REF_DB,
-                                smr_r_op=join(
-                                    out_dir, '%s.ribosomal.R2' %
-                                    run_prefix),
-                                smr_nr_op=join(
-                                    out_dir, '%s.nonribosomal.R2' %
-                                    run_prefix),
-                                smr_r_op_gz=join(
-                                    out_dir, '%s.ribosomal.R2.fastq.gz' %
-                                    run_prefix),
-                                smr_nr_op_gz=join(
-                                    out_dir, '%s.nonribosomal.R2.fastq.gz' %
-                                    run_prefix)
-                                ))
+            cmds.append(template.format(**arguments))
 
     return cmds, samples
     # In this version I have not added a summary file or sam file
