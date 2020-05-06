@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 
 
-from os.path import join
+from os.path import join, basename
 from os import environ
 from qp_shogun.utils import (
     _format_params, make_read_pairs_per_sample,
@@ -105,7 +105,8 @@ def generate_sortmerna_commands(forward_seqs, reverse_seqs, map_file,
                 continue
 
             arguments['ip'] = fp
-            arguments['ip_unpigz'] = fp.replace('.fastq.gz', '.fastq')
+            arguments['ip_unpigz'] = join(
+                out_dir, basename(fp.replace('.fastq.gz', '.fastq')))
             arguments['smr_r_op'] = prefix_path + '.ribosomal.R%d'\
                 % (index + 1)
             arguments['smr_nr_op'] = prefix_path + '.nonribosomal.R%d'\
