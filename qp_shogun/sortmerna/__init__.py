@@ -30,7 +30,7 @@ dflt_param_set = {
         'Output blast format': 1,
         'Number of alignments': 1,
         'Number of threads': 5,
-        'Memory': 3988
+        'Memory': 31000
     }
 }
 
