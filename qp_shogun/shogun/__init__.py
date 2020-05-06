@@ -19,7 +19,7 @@ default_db_list = get_dbs_list(environ["QC_SHOGUN_DB_DP"])
 req_params = {'input': ('artifact', ['per_sample_FASTQ'])}
 opt_params = {
     # database
-    'Database': ["choice: [%s]" % default_db_list],
+    'Database': ["choice: [%s]" % default_db_list, default_db_list[0]],
     # aligner
     'Aligner tool': ['choice:[' +
                      '"utree", ' +
