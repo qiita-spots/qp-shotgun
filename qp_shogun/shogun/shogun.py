@@ -217,7 +217,7 @@ def shogun(qclient, job_id, parameters, out_dir):
         return False, None, msg
 
     sys_msg = "Step 5 of 6: Compressing and converting alignment to BIOM"
-    qclient.update_job_step(job_id, msg)
+    qclient.update_job_step(job_id, sys_msg)
     alignment_fp = join(out_dir, 'alignment.%s.%s' % (
         parameters['aligner'], ALN2EXT[parameters['aligner']]))
     xz_cmd = 'xz -9 -T%s %s' % (parameters['threads'], alignment_fp)
