@@ -20,7 +20,8 @@ req_params = {'input': ('artifact', ['per_sample_FASTQ'])}
 opt_params = {
     # database
     'Database': ["choice: [%s]" % default_db_list,
-                 default_db_list.split(',')[0]],
+                 # making the first option default and rm quotes
+                 default_db_list.split(',')[0].strip('"')],
     # aligner
     'Aligner tool': ['choice:[' +
                      '"utree", ' +
