@@ -92,9 +92,9 @@ class QC_SortmernaTests(PluginTestCase):
         # index files take up the most space
 
         exp_cmd = [
-            ('unpigz -p 5 -c fastq/s1.fastq.gz > fastq/s1.fastq && '
+            ('unpigz -p 5 -c fastq/s1.fastq.gz > output/s1.fastq && '
 
-             'sortmerna --ref %s --reads fastq/s1.fastq '
+             'sortmerna --ref %s --reads output/s1.fastq '
              '--aligned output/s1.ribosomal.R1 '
              '--other output/s1.nonribosomal.R1 '
              '--fastx -a 5 --blast 1 -m 3988 --num_alignments 1 && '
@@ -104,9 +104,9 @@ class QC_SortmernaTests(PluginTestCase):
 
              'pigz -p 5 -c output/s1.nonribosomal.R1.fastq > '
              'output/s1.nonribosomal.R1.fastq.gz;') % rna_ref_db,
-            ('unpigz -p 5 -c fastq/s1.R2.fastq.gz > fastq/s1.R2.fastq && '
+            ('unpigz -p 5 -c fastq/s1.R2.fastq.gz > output/s1.R2.fastq && '
 
-             'sortmerna --ref %s --reads fastq/s1.R2.fastq '
+             'sortmerna --ref %s --reads output/s1.R2.fastq '
              '--aligned output/s1.ribosomal.R2 '
              '--other output/s1.nonribosomal.R2 '
              '--fastx -a 5 --blast 1 -m 3988 --num_alignments 1 && '

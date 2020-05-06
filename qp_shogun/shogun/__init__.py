@@ -9,20 +9,19 @@
 from qiita_client import QiitaCommand
 from .shogun import shogun
 from .utils import (generate_shogun_dflt_params, get_dbs_list)
-from os.path import join
 from os import environ
 
 
 __all__ = ['shogun']
 
 # Define the shogun command
-default_db = join(environ["QC_SHOGUN_DB_DP"], 'rep82')
 default_db_list = get_dbs_list(environ["QC_SHOGUN_DB_DP"])
 req_params = {'input': ('artifact', ['per_sample_FASTQ'])}
 opt_params = {
     # database
     'Database': ["choice: [%s]" % default_db_list,
-                 default_db],
+                 # making the first option default and rm quotes
+                 default_db_list.split(',')[0].strip('"')],
     # aligner
     'Aligner tool': ['choice:[' +
                      '"utree", ' +
