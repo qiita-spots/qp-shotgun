@@ -29,7 +29,7 @@ dflt_param_set = {
     'Ribosomal read filtering': {
         'Output blast format': 1,
         'Number of alignments': 1,
-        'Number of threads': 5,
+        'Number of threads': 10,
         'Memory': 31000
     }
 }
