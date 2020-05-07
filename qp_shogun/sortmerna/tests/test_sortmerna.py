@@ -177,9 +177,8 @@ class QC_SortmernaTests(PluginTestCase):
         obs_fps = []
         # checking if this is a dict of dicts
         for a in ainfo:
-            for a_ainfo in a:
-                self.assertEqual("per_sample_FASTQ", a_ainfo.artifact_type)
-                obs_fps.append(a_ainfo.files)
+            self.assertEqual("per_sample_FASTQ", a.artifact_type)
+            obs_fps.append(a.files)
 
         od = partial(join, out_dir)
 
