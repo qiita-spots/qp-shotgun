@@ -31,7 +31,7 @@ install:
   - conda config --add channels defaults
   - conda config --add channels bioconda
   - conda config --add channels conda-forge
-  - conda create --yes -n qp-shogun -c knights-lab shogun=1.0.7 biom-format samtools bedtools pigz sortmerna=2.1b
+  - conda create --yes -n qp-shogun -c knights-lab shogun=1.0.8 biom-format samtools bedtools pigz sortmerna=2.1b
   - source activate qp-shogun
   - pip install -U pip pip nose flake8
   - pip install sphinx sphinx-bootstrap-theme nose-timer codecov biopython
@@ -53,7 +53,7 @@ install:
   - bowtie2_version=`bowtie2 --version`
   - burst15_version=`burst15 -h | grep BURST`
   - utree_version=`(utree-search_gg || true)`
-  - if [[ $shogun_version != *"1.0.7"* ]]; then echo "wrong shogun version", $shogun_version; exit 1; fi
+  - if [[ $shogun_version != *"1.0.8"* ]]; then echo "wrong shogun version", $shogun_version; exit 1; fi
   - if [[ $bowtie2_version != *"2.3.5"* ]]; then echo "wrong bowtie2 version", $bowtie2_version; exit 1; fi
   - if [[ $burst15_version != *"0.99.8"* ]]; then echo "wrong burst15 version", $burst15_version; exit 1; fi
   - if [[ $utree_version != *"2.0RF"* ]]; then echo "wrong utree version", $utree_version; exit 1; fi
