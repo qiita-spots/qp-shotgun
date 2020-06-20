@@ -76,7 +76,7 @@ def readfq(fp):  # this is a generator function
             if line[0] in '@+>':
                 last = line[:-1]
                 break
-            seqs.append(l[:-1])
+            seqs.append(line[:-1])
         if not last or last[0] != '+':  # this is a fasta record
             yield name, ''.join(seqs), None  # yield a fasta record
             if not last:
