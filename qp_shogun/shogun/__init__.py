@@ -41,5 +41,5 @@ outputs = {
 dflt_param_set = generate_shogun_dflt_params()
 
 shogun_cmd = QiitaCommand(
-    'Shogun v1.0.7', "Functional and Taxonomic Predictions", shogun,
+    'Shogun v1.0.8', "Functional and Taxonomic Predictions", shogun,
     req_params, opt_params, outputs, dflt_param_set)
