@@ -172,19 +172,19 @@ class ShogunTests(PluginTestCase):
                 'Database': join(self.db_path, 'rep82'),
                 'Aligner tool': 'bowtie2',
                 'Capitalist': False,
-                'Number of threads': 5,
+                'Number of threads': 15,
                 'Percent identity': 0.95},
             'rep82_utree': {
                 'Database': join(self.db_path, 'rep82'),
                 'Aligner tool': 'utree',
                 'Capitalist': False,
-                'Number of threads': 5,
+                'Number of threads': 15,
                 'Percent identity': 0.95},
             'rep82_burst': {
                 'Database': join(self.db_path, 'rep82'),
                 'Aligner tool': 'burst',
                 'Capitalist': False,
-                'Number of threads': 5,
+                'Number of threads': 15,
                 'Percent identity': 0.95}
         }
 
