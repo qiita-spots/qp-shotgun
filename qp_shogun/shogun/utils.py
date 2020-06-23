@@ -56,7 +56,7 @@ def generate_shogun_dflt_params():
                                               'Aligner tool': aligner,
                                               'Percent identity': 0.95,
                                               'Capitalist': False,
-                                              'Number of threads': 5}
+                                              'Number of threads': 15}
 
     return(dflt_param_set)
 

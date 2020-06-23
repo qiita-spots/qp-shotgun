@@ -28,7 +28,7 @@ opt_params = {
                      '"burst", ' +
                      '"bowtie2"]', 'bowtie2'],
     # threads
-    'Number of threads': ['integer', '5'],
+    'Number of threads': ['integer', '10'],
     'Capitalist': ['boolean', 'False'],
     'Percent identity': ['float', '0.95'],
     }
