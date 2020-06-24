@@ -68,7 +68,7 @@ class QC_FilterTests(PluginTestCase):
         obs = generate_filter_dflt_params()
         exp = {'phix': {'Bowtie2 database to filter': join(db_path, 'phix',
                                                            'phix'),
-                        'Number of threads': 5}}
+                        'Number of threads': 15}}
 
         self.assertEqual(obs, exp)
 
