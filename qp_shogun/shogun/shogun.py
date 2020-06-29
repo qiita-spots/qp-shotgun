@@ -18,9 +18,13 @@ SHOGUN_PARAMS = {
     'Number of threads': 'threads', 'Capitalist': 'capitalist',
     'Percent identity': 'percent_id'}
 
-ALN2EXT = {'utree': 'tsv',
-           'burst': 'b6',
-           'bowtie2': 'sam'}
+ALN2EXT = {
+    # if you uncomment these lines, also uncomment the tests:
+    #    test_shogun_utree, test_shogun_burst
+    # 'utree': 'tsv',
+    # 'burst': 'b6',
+    'bowtie2': 'sam'
+}
 
 
 def generate_fna_file(temp_path, samples):

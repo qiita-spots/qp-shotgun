@@ -24,8 +24,8 @@ opt_params = {
                  default_db_list.split(',')[0].strip('"')],
     # aligner
     'Aligner tool': ['choice:[' +
-                     '"utree", ' +
-                     '"burst", ' +
+                     # '"utree", ' +
+                     # '"burst", ' +
                      '"bowtie2"]', 'bowtie2'],
     # threads
     'Number of threads': ['integer', '10'],

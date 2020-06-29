@@ -500,119 +500,119 @@ class ShogunTests(PluginTestCase):
                          [(pout_dir('otu_table.redist.species.biom'),
                            'biom')])])
 
-    def test_shogun_burst(self):
-        # inserting new prep template
-        prep_info_dict = {
-           'SKB8.640193': {'run_prefix': 'S22205_S104'},
-           'SKD8.640184': {'run_prefix': 'S22282_S102'}}
-        data = {'prep_info': dumps(prep_info_dict),
-                # magic #1 = testing study
-                'study': 1,
-                'data_type': 'Metagenomic'}
-        pid = self.qclient.post('/apitest/prep_template/', data=data)['prep']
+    # def test_shogun_burst(self):
+    #     # inserting new prep template
+    #     prep_info_dict = {
+    #        'SKB8.640193': {'run_prefix': 'S22205_S104'},
+    #        'SKD8.640184': {'run_prefix': 'S22282_S102'}}
+    #     data = {'prep_info': dumps(prep_info_dict),
+    #             # magic #1 = testing study
+    #             'study': 1,
+    #             'data_type': 'Metagenomic'}
+    #     pid = self.qclient.post('/apitest/prep_template/', data=data)['prep']
+    #
+    #     # inserting artifacts
+    #     fp1_1, fp1_2, fp2_1, fp2_2 = self._helper_shogun_bowtie()
+    #     data = {
+    #        'filepaths': dumps([
+    #            (fp1_1, 'raw_forward_seqs'),
+    #            (fp1_2, 'raw_reverse_seqs'),
+    #            (fp2_1, 'raw_forward_seqs'),
+    #            (fp2_2, 'raw_reverse_seqs')]),
+    #        'type': "per_sample_FASTQ",
+    #        'name': "Test Shogun artifact",
+    #        'prep': pid}
+    #     aid = self.qclient.post('/apitest/artifact/', data=data)['artifact']
+    #
+    #     self.params['input'] = aid
+    #     self.params['Aligner tool'] = 'burst'
+    #     data = {'user': 'demo@microbio.me',
+    #             'command': dumps(['qp-shogun', '012020', 'Shogun v1.0.8']),
+    #             'status': 'running',
+    #             'parameters': dumps(self.params)}
+    #     jid = self.qclient.post('/apitest/processing_job/', data=data)['job']
+    #
+    #     out_dir = mkdtemp()
+    #     self._clean_up_files.append(out_dir)
+    #
+    #     success, ainfo, msg = shogun(self.qclient, jid, self.params, out_dir)
+    #
+    #     self.assertEqual("", msg)
+    #     self.assertTrue(success)
+    #
+    #     # we are expecting 1 artifacts in total
+    #     pout_dir = partial(join, out_dir)
+    #     self.assertCountEqual(ainfo, [
+    #         ArtifactInfo('Shogun Alignment Profile', 'BIOM',
+    #                      [(pout_dir('otu_table.alignment.profile.biom'),
+    #                        'biom'),
+    #                       (pout_dir('alignment.burst.b6.xz'), 'log')]),
+    #         ArtifactInfo('Taxonomic Predictions - phylum', 'BIOM',
+    #                      [(pout_dir('otu_table.redist.phylum.biom'),
+    #                        'biom')]),
+    #         ArtifactInfo('Taxonomic Predictions - genus', 'BIOM',
+    #                      [(pout_dir('otu_table.redist.genus.biom'),
+    #                        'biom')]),
+    #         ArtifactInfo('Taxonomic Predictions - species', 'BIOM',
+    #                      [(pout_dir('otu_table.redist.species.biom'),
+    #                        'biom')])])
 
-        # inserting artifacts
-        fp1_1, fp1_2, fp2_1, fp2_2 = self._helper_shogun_bowtie()
-        data = {
-           'filepaths': dumps([
-               (fp1_1, 'raw_forward_seqs'),
-               (fp1_2, 'raw_reverse_seqs'),
-               (fp2_1, 'raw_forward_seqs'),
-               (fp2_2, 'raw_reverse_seqs')]),
-           'type': "per_sample_FASTQ",
-           'name': "Test Shogun artifact",
-           'prep': pid}
-        aid = self.qclient.post('/apitest/artifact/', data=data)['artifact']
-
-        self.params['input'] = aid
-        self.params['Aligner tool'] = 'burst'
-        data = {'user': 'demo@microbio.me',
-                'command': dumps(['qp-shogun', '012020', 'Shogun v1.0.8']),
-                'status': 'running',
-                'parameters': dumps(self.params)}
-        jid = self.qclient.post('/apitest/processing_job/', data=data)['job']
-
-        out_dir = mkdtemp()
-        self._clean_up_files.append(out_dir)
-
-        success, ainfo, msg = shogun(self.qclient, jid, self.params, out_dir)
-
-        self.assertEqual("", msg)
-        self.assertTrue(success)
-
-        # we are expecting 1 artifacts in total
-        pout_dir = partial(join, out_dir)
-        self.assertCountEqual(ainfo, [
-            ArtifactInfo('Shogun Alignment Profile', 'BIOM',
-                         [(pout_dir('otu_table.alignment.profile.biom'),
-                           'biom'),
-                          (pout_dir('alignment.burst.b6.xz'), 'log')]),
-            ArtifactInfo('Taxonomic Predictions - phylum', 'BIOM',
-                         [(pout_dir('otu_table.redist.phylum.biom'),
-                           'biom')]),
-            ArtifactInfo('Taxonomic Predictions - genus', 'BIOM',
-                         [(pout_dir('otu_table.redist.genus.biom'),
-                           'biom')]),
-            ArtifactInfo('Taxonomic Predictions - species', 'BIOM',
-                         [(pout_dir('otu_table.redist.species.biom'),
-                           'biom')])])
-
-    def test_shogun_utree(self):
-        # inserting new prep template
-        prep_info_dict = {
-            'SKB8.640193': {'run_prefix': 'S22205_S104'},
-            'SKD8.640184': {'run_prefix': 'S22282_S102'}}
-        data = {'prep_info': dumps(prep_info_dict),
-                # magic #1 = testing study
-                'study': 1,
-                'data_type': 'Metagenomic'}
-        pid = self.qclient.post('/apitest/prep_template/', data=data)['prep']
-
-        # inserting artifacts
-        fp1_1, fp1_2, fp2_1, fp2_2 = self._helper_shogun_bowtie()
-        data = {
-            'filepaths': dumps([
-                (fp1_1, 'raw_forward_seqs'),
-                (fp1_2, 'raw_reverse_seqs'),
-                (fp2_1, 'raw_forward_seqs'),
-                (fp2_2, 'raw_reverse_seqs')]),
-            'type': "per_sample_FASTQ",
-            'name': "Test Shogun artifact",
-            'prep': pid}
-        aid = self.qclient.post('/apitest/artifact/', data=data)['artifact']
-
-        self.params['input'] = aid
-        self.params['Aligner tool'] = 'utree'
-        data = {'user': 'demo@microbio.me',
-                'command': dumps(['qp-shogun', '012020', 'Shogun v1.0.8']),
-                'status': 'running',
-                'parameters': dumps(self.params)}
-        jid = self.qclient.post('/apitest/processing_job/', data=data)['job']
-
-        out_dir = mkdtemp()
-        self._clean_up_files.append(out_dir)
-
-        success, ainfo, msg = shogun(self.qclient, jid, self.params, out_dir)
-
-        self.assertEqual("", msg)
-        self.assertTrue(success)
-
-        # we are expecting 1 artifacts in total
-        pout_dir = partial(join, out_dir)
-        self.assertCountEqual(ainfo, [
-            ArtifactInfo('Shogun Alignment Profile', 'BIOM',
-                         [(pout_dir('otu_table.alignment.profile.biom'),
-                           'biom'),
-                          (pout_dir('alignment.utree.tsv.xz'), 'log')]),
-            ArtifactInfo('Taxonomic Predictions - phylum', 'BIOM',
-                         [(pout_dir('otu_table.redist.phylum.biom'),
-                           'biom')]),
-            ArtifactInfo('Taxonomic Predictions - genus', 'BIOM',
-                         [(pout_dir('otu_table.redist.genus.biom'),
-                           'biom')]),
-            ArtifactInfo('Taxonomic Predictions - species', 'BIOM',
-                         [(pout_dir('otu_table.redist.species.biom'),
-                           'biom')])])
+    # def test_shogun_utree(self):
+    #     # inserting new prep template
+    #     prep_info_dict = {
+    #         'SKB8.640193': {'run_prefix': 'S22205_S104'},
+    #         'SKD8.640184': {'run_prefix': 'S22282_S102'}}
+    #     data = {'prep_info': dumps(prep_info_dict),
+    #             # magic #1 = testing study
+    #             'study': 1,
+    #             'data_type': 'Metagenomic'}
+    #     pid = self.qclient.post('/apitest/prep_template/', data=data)['prep']
+    #
+    #     # inserting artifacts
+    #     fp1_1, fp1_2, fp2_1, fp2_2 = self._helper_shogun_bowtie()
+    #     data = {
+    #         'filepaths': dumps([
+    #             (fp1_1, 'raw_forward_seqs'),
+    #             (fp1_2, 'raw_reverse_seqs'),
+    #             (fp2_1, 'raw_forward_seqs'),
+    #             (fp2_2, 'raw_reverse_seqs')]),
+    #         'type': "per_sample_FASTQ",
+    #         'name': "Test Shogun artifact",
+    #         'prep': pid}
+    #     aid = self.qclient.post('/apitest/artifact/', data=data)['artifact']
+    #
+    #     self.params['input'] = aid
+    #     self.params['Aligner tool'] = 'utree'
+    #     data = {'user': 'demo@microbio.me',
+    #             'command': dumps(['qp-shogun', '012020', 'Shogun v1.0.8']),
+    #             'status': 'running',
+    #             'parameters': dumps(self.params)}
+    #     jid = self.qclient.post('/apitest/processing_job/', data=data)['job']
+    #
+    #     out_dir = mkdtemp()
+    #     self._clean_up_files.append(out_dir)
+    #
+    #     success, ainfo, msg = shogun(self.qclient, jid, self.params, out_dir)
+    #
+    #     self.assertEqual("", msg)
+    #     self.assertTrue(success)
+    #
+    #     # we are expecting 1 artifacts in total
+    #     pout_dir = partial(join, out_dir)
+    #     self.assertCountEqual(ainfo, [
+    #         ArtifactInfo('Shogun Alignment Profile', 'BIOM',
+    #                      [(pout_dir('otu_table.alignment.profile.biom'),
+    #                        'biom'),
+    #                       (pout_dir('alignment.utree.tsv.xz'), 'log')]),
+    #         ArtifactInfo('Taxonomic Predictions - phylum', 'BIOM',
+    #                      [(pout_dir('otu_table.redist.phylum.biom'),
+    #                        'biom')]),
+    #         ArtifactInfo('Taxonomic Predictions - genus', 'BIOM',
+    #                      [(pout_dir('otu_table.redist.genus.biom'),
+    #                        'biom')]),
+    #         ArtifactInfo('Taxonomic Predictions - species', 'BIOM',
+    #                      [(pout_dir('otu_table.redist.species.biom'),
+    #                        'biom')])])
 
 
 if __name__ == '__main__':
