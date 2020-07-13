@@ -16,7 +16,7 @@ from .sortmerna import sortmerna_cmd
 
 # Initialize the plugin
 plugin = QiitaPlugin(
-    'qp-shogun', '012020', 'Shogun analysis tools for shotgun data')
+    'qp-shogun', '072020', 'Shogun analysis tools for shotgun data')
 
 plugin.register_command(trim_cmd)
 plugin.register_command(filter_cmd)
