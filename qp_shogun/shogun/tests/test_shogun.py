@@ -563,14 +563,7 @@ class ShogunTests(PluginTestCase):
 
         # we are expecting 1 artifacts in total
         pout_dir = partial(join, out_dir)
-
-        for ai in ainfo:
-            print('==========')
-            print(ai.output_name)
-            print(ai.artifact_type)
-            print(ai.files)
-            print(ai.archive)
-        self.assertCountEqual(ainfo, [
+        exp = [
             ArtifactInfo('Shogun Alignment Profile', 'BIOM',
                          [(pout_dir('otu_table.alignment.profile.biom'),
                            'biom'),
@@ -587,7 +580,19 @@ class ShogunTests(PluginTestCase):
             ArtifactInfo('Woltka - gOTU', 'BIOM',
                          [(pout_dir('woltka_gotu.biom'), 'biom')]),
             ArtifactInfo('Woltka - per gene table', 'BIOM',
-                         [(pout_dir('woltka_per_gene.biom'), 'biom')])])
+                         [(pout_dir('woltka_per_gene.biom'), 'biom')])]
+
+        for x, y in zip(ainfo, exp):
+            print('==========')
+            print(x.output_name)
+            print(y.output_name)
+            print(x.artifact_type)
+            print(y.artifact_type)
+            print(x.files)
+            print(y.files)
+            print(x.archive)
+            print(y.archive)
+        self.assertCountEqual(ainfo, exp)
 
     # def test_shogun_burst(self):
     #     # inserting new prep template
