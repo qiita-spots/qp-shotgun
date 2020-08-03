@@ -576,7 +576,11 @@ class ShogunTests(PluginTestCase):
                            'biom')]),
             ArtifactInfo('Taxonomic Predictions - species', 'BIOM',
                          [(pout_dir('otu_table.redist.species.biom'),
-                           'biom')])])
+                           'biom')]),
+            ArtifactInfo('Woltka - gOTU', 'BIOM',
+                         [(pout_dir('woltka_gotu.biom'), 'biom')]),
+            ArtifactInfo('Woltka - per gene table', 'BIOM',
+                         [(pout_dir('woltka_per_gene.biom'), 'biom')])])
 
     # def test_shogun_burst(self):
     #     # inserting new prep template
