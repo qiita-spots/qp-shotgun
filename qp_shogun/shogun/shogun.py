@@ -276,8 +276,8 @@ def shogun(qclient, job_id, parameters, out_dir):
             return False, None, msg
 
         ainfo.extend([
-            ArtifactInfo('Woltka - gOTU', 'BIOM', [(gotu_fp, 'biom')]),
-            ArtifactInfo('Woltka - per gene table', 'BIOM', [
+            ArtifactInfo('Woltka - per genome', 'BIOM', [(gotu_fp, 'biom')]),
+            ArtifactInfo('Woltka - per gene', 'BIOM', [
                 (per_gene_fp, 'biom')])])
 
     return True, ainfo, ""

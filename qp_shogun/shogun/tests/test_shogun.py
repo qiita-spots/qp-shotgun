@@ -577,9 +577,9 @@ class ShogunTests(PluginTestCase):
             ArtifactInfo('Taxonomic Predictions - species', 'BIOM',
                          [(pout_dir('otu_table.redist.species.biom'),
                            'biom')]),
-            ArtifactInfo('Woltka - gOTU', 'BIOM',
+            ArtifactInfo('Woltka - per genome', 'BIOM',
                          [(pout_dir('woltka_gotu.biom'), 'biom')]),
-            ArtifactInfo('Woltka - per gene table', 'BIOM',
+            ArtifactInfo('Woltka - per gene', 'BIOM',
                          [(pout_dir('woltka_per_gene.biom'), 'biom')])]
 
         self.assertCountEqual(ainfo, exp)
