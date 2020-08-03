@@ -563,7 +563,13 @@ class ShogunTests(PluginTestCase):
 
         # we are expecting 1 artifacts in total
         pout_dir = partial(join, out_dir)
-        print (len(ainfo), ainfo)
+
+        for ai in ainfo:
+            print('==========')
+            print(ai.output_name)
+            print(ai.artifact_type)
+            print(ai.files)
+            print(ai.archive)
         self.assertCountEqual(ainfo, [
             ArtifactInfo('Shogun Alignment Profile', 'BIOM',
                          [(pout_dir('otu_table.alignment.profile.biom'),

@@ -270,8 +270,6 @@ def shogun(qclient, job_id, parameters, out_dir):
             'woltka classify -i %s -c %s -o %s' % (
                 alignment_fp_xz, coord_fp, per_gene_fp)]
 
-        print('------------>', commands)
-
         success, msg = _run_commands(
             qclient, job_id, commands, sys_msg, 'Woltka')
         if not success:
