@@ -582,16 +582,6 @@ class ShogunTests(PluginTestCase):
             ArtifactInfo('Woltka - per gene table', 'BIOM',
                          [(pout_dir('woltka_per_gene.biom'), 'biom')])]
 
-        for x, y in zip(ainfo, exp):
-            print('==========')
-            print(x.output_name)
-            print(y.output_name)
-            print(x.artifact_type)
-            print(y.artifact_type)
-            print(x.files)
-            print(y.files)
-            print(x.archive)
-            print(y.archive)
         self.assertCountEqual(ainfo, exp)
 
     # def test_shogun_burst(self):
