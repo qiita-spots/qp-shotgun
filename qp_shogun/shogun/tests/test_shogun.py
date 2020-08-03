@@ -154,7 +154,8 @@ class ShogunTests(PluginTestCase):
     def test_get_dbs(self):
         db_path = self.db_path
         obs = get_dbs(db_path)
-        exp = {'rep82': join(db_path, 'rep82')}
+        exp = {'rep82': join(db_path, 'rep82'),
+               'wol': join(db_path, 'wol')}
 
         self.assertEqual(obs, exp)
 
@@ -174,18 +175,36 @@ class ShogunTests(PluginTestCase):
                 'Capitalist': False,
                 'Number of threads': 15,
                 'Percent identity': 0.95},
-            'rep82_utree': {
-                'Database': join(self.db_path, 'rep82'),
-                'Aligner tool': 'utree',
+            # 'rep82_utree': {
+            #     'Database': join(self.db_path, 'rep82'),
+            #     'Aligner tool': 'utree',
+            #     'Capitalist': False,
+            #     'Number of threads': 15,
+            #     'Percent identity': 0.95},
+            # 'rep82_burst': {
+            #     'Database': join(self.db_path, 'rep82'),
+            #     'Aligner tool': 'burst',
+            #     'Capitalist': False,
+            #     'Number of threads': 15,
+            #     'Percent identity': 0.95},
+            'wol_bowtie2': {
+                'Database': join(self.db_path, 'wol'),
+                'Aligner tool': 'bowtie2',
                 'Capitalist': False,
                 'Number of threads': 15,
                 'Percent identity': 0.95},
-            'rep82_burst': {
-                'Database': join(self.db_path, 'rep82'),
-                'Aligner tool': 'burst',
-                'Capitalist': False,
-                'Number of threads': 15,
-                'Percent identity': 0.95}
+            # 'wol_utree': {
+            #     'Database': join(self.db_path, 'wol'),
+            #     'Aligner tool': 'utree',
+            #     'Capitalist': False,
+            #     'Number of threads': 15,
+            #     'Percent identity': 0.95},
+            # 'wol_burst': {
+            #     'Database': join(self.db_path, 'wol'),
+            #     'Aligner tool': 'burst',
+            #     'Capitalist': False,
+            #     'Number of threads': 15,
+            #     'Percent identity': 0.95}
         }
 
         self.assertEqual(obs, exp)
