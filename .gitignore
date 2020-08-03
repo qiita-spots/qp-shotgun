@@ -94,6 +94,7 @@ ENV/
 
 # Shogun DB
 qp_shogun/shogun/databases/rep82/
+qp_shogun/shogun/databases/wol/
 
 # Redis
 dump.rdb
