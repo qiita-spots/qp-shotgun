@@ -162,8 +162,10 @@ class ShogunTests(PluginTestCase):
     def test_get_dbs_list(self):
         db_path = self.db_path
         obs = get_dbs_list(db_path)
-        exp = join(join('"'+db_path, 'rep82')+'"')
-
+        exp = '"%s", "%s"' % (
+            join(db_path, 'rep82'),
+            join(db_path, 'wol'),
+        )
         self.assertEqual(obs, exp)
 
     def test_generate_shogun_dflt_params(self):
