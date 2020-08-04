@@ -262,11 +262,11 @@ def shogun(qclient, job_id, parameters, out_dir):
     # Wolka only works with WOL databases
     if 'wol' in parameters['database']:
         sys_msg = "Step 7 of 7: Wolka gOTU and per-gene tables (%d/{0})"
-        gotu_fp = join(out_dir, 'woltka_gotu.biom')
+        per_genome_fp = join(out_dir, 'woltka_per_genome.biom')
         per_gene_fp = join(out_dir, 'woltka_per_gene.biom')
         coord_fp = join(parameters['database'], 'WoLmin.coords')
         commands = [
-            'woltka classify -i %s -o %s' % (alignment_fp_xz, gotu_fp),
+            'woltka classify -i %s -o %s' % (alignment_fp_xz, per_genome_fp),
             'woltka classify -i %s -c %s -o %s' % (
                 alignment_fp_xz, coord_fp, per_gene_fp)]
 
@@ -276,7 +276,8 @@ def shogun(qclient, job_id, parameters, out_dir):
             return False, None, msg
 
         ainfo.extend([
-            ArtifactInfo('Woltka - per genome', 'BIOM', [(gotu_fp, 'biom')]),
+            ArtifactInfo('Woltka - per genome', 'BIOM', [
+                (per_genome_fp, 'biom')]),
             ArtifactInfo('Woltka - per gene', 'BIOM', [
                 (per_gene_fp, 'biom')])])
 

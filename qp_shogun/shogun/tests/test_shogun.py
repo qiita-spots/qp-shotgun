@@ -578,7 +578,7 @@ class ShogunTests(PluginTestCase):
                          [(pout_dir('otu_table.redist.species.biom'),
                            'biom')]),
             ArtifactInfo('Woltka - per genome', 'BIOM',
-                         [(pout_dir('woltka_gotu.biom'), 'biom')]),
+                         [(pout_dir('woltka_per_genome.biom'), 'biom')]),
             ArtifactInfo('Woltka - per gene', 'BIOM',
                          [(pout_dir('woltka_per_gene.biom'), 'biom')])]
 
