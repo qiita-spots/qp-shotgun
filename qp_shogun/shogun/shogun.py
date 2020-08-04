@@ -259,7 +259,7 @@ def shogun(qclient, job_id, parameters, out_dir):
         aname = 'Taxonomic Predictions - %s' % level
         ainfo.append(ArtifactInfo(aname, 'BIOM', [(output, 'biom')]))
 
-    # Wolka only works with WOL databases
+    # Woltka only works with WOL databases
     if 'wol' in parameters['database']:
         sys_msg = "Step 7 of 7: Wolka gOTU and per-gene tables (%d/{0})"
         per_genome_fp = join(out_dir, 'woltka_per_genome.biom')
