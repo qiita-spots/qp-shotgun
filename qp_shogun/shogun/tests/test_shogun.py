@@ -154,15 +154,18 @@ class ShogunTests(PluginTestCase):
     def test_get_dbs(self):
         db_path = self.db_path
         obs = get_dbs(db_path)
-        exp = {'rep82': join(db_path, 'rep82')}
+        exp = {'rep82': join(db_path, 'rep82'),
+               'wol': join(db_path, 'wol')}
 
         self.assertEqual(obs, exp)
 
     def test_get_dbs_list(self):
         db_path = self.db_path
         obs = get_dbs_list(db_path)
-        exp = join(join('"'+db_path, 'rep82')+'"')
-
+        exp = '"%s", "%s"' % (
+            join(db_path, 'rep82'),
+            join(db_path, 'wol'),
+        )
         self.assertEqual(obs, exp)
 
     def test_generate_shogun_dflt_params(self):
@@ -174,18 +177,36 @@ class ShogunTests(PluginTestCase):
                 'Capitalist': False,
                 'Number of threads': 15,
                 'Percent identity': 0.95},
-            'rep82_utree': {
-                'Database': join(self.db_path, 'rep82'),
-                'Aligner tool': 'utree',
+            # 'rep82_utree': {
+            #     'Database': join(self.db_path, 'rep82'),
+            #     'Aligner tool': 'utree',
+            #     'Capitalist': False,
+            #     'Number of threads': 15,
+            #     'Percent identity': 0.95},
+            # 'rep82_burst': {
+            #     'Database': join(self.db_path, 'rep82'),
+            #     'Aligner tool': 'burst',
+            #     'Capitalist': False,
+            #     'Number of threads': 15,
+            #     'Percent identity': 0.95},
+            'wol_bowtie2': {
+                'Database': join(self.db_path, 'wol'),
+                'Aligner tool': 'bowtie2',
                 'Capitalist': False,
                 'Number of threads': 15,
                 'Percent identity': 0.95},
-            'rep82_burst': {
-                'Database': join(self.db_path, 'rep82'),
-                'Aligner tool': 'burst',
-                'Capitalist': False,
-                'Number of threads': 15,
-                'Percent identity': 0.95}
+            # 'wol_utree': {
+            #     'Database': join(self.db_path, 'wol'),
+            #     'Aligner tool': 'utree',
+            #     'Capitalist': False,
+            #     'Number of threads': 15,
+            #     'Percent identity': 0.95},
+            # 'wol_burst': {
+            #     'Database': join(self.db_path, 'wol'),
+            #     'Aligner tool': 'burst',
+            #     'Capitalist': False,
+            #     'Number of threads': 15,
+            #     'Percent identity': 0.95}
         }
 
         self.assertEqual(obs, exp)
@@ -499,6 +520,69 @@ class ShogunTests(PluginTestCase):
             ArtifactInfo('Taxonomic Predictions - species', 'BIOM',
                          [(pout_dir('otu_table.redist.species.biom'),
                            'biom')])])
+
+    def test_wol_bt2(self):
+        # inserting new prep template
+        prep_info_dict = {
+            'SKB8.640193': {'run_prefix': 'S22205_S104'},
+            'SKD8.640184': {'run_prefix': 'S22282_S102'}}
+        data = {'prep_info': dumps(prep_info_dict),
+                # magic #1 = testing study
+                'study': 1,
+                'data_type': 'Metagenomic'}
+        pid = self.qclient.post('/apitest/prep_template/', data=data)['prep']
+
+        # inserting artifacts
+        fp1_1, fp1_2, fp2_1, fp2_2 = self._helper_shogun_bowtie()
+        data = {
+            'filepaths': dumps([
+                (fp1_1, 'raw_forward_seqs'),
+                (fp1_2, 'raw_reverse_seqs'),
+                (fp2_1, 'raw_forward_seqs'),
+                (fp2_2, 'raw_reverse_seqs')]),
+            'type': "per_sample_FASTQ",
+            'name': "Test Shogun artifact",
+            'prep': pid}
+        aid = self.qclient.post('/apitest/artifact/', data=data)['artifact']
+
+        self.params['input'] = aid
+        self.params['Database'] = join(self.db_path, 'wol')
+        data = {'user': 'demo@microbio.me',
+                'command': dumps(['qp-shogun', '072020', 'Shogun v1.0.8']),
+                'status': 'running',
+                'parameters': dumps(self.params)}
+        jid = self.qclient.post('/apitest/processing_job/', data=data)['job']
+
+        out_dir = mkdtemp()
+        self._clean_up_files.append(out_dir)
+
+        success, ainfo, msg = shogun(self.qclient, jid, self.params, out_dir)
+
+        self.assertEqual("", msg)
+        self.assertTrue(success)
+
+        # we are expecting 1 artifacts in total
+        pout_dir = partial(join, out_dir)
+        exp = [
+            ArtifactInfo('Shogun Alignment Profile', 'BIOM',
+                         [(pout_dir('otu_table.alignment.profile.biom'),
+                           'biom'),
+                          (pout_dir('alignment.bowtie2.sam.xz'), 'log')]),
+            ArtifactInfo('Taxonomic Predictions - phylum', 'BIOM',
+                         [(pout_dir('otu_table.redist.phylum.biom'),
+                           'biom')]),
+            ArtifactInfo('Taxonomic Predictions - genus', 'BIOM',
+                         [(pout_dir('otu_table.redist.genus.biom'),
+                           'biom')]),
+            ArtifactInfo('Taxonomic Predictions - species', 'BIOM',
+                         [(pout_dir('otu_table.redist.species.biom'),
+                           'biom')]),
+            ArtifactInfo('Woltka - per genome', 'BIOM',
+                         [(pout_dir('woltka_per_genome.biom'), 'biom')]),
+            ArtifactInfo('Woltka - per gene', 'BIOM',
+                         [(pout_dir('woltka_per_gene.biom'), 'biom')])]
+
+        self.assertCountEqual(ainfo, exp)
 
     # def test_shogun_burst(self):
     #     # inserting new prep template

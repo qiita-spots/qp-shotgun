@@ -136,7 +136,7 @@ def _format_params(parameters, func_params):
 
 def _run_commands(qclient, job_id, commands, msg, cmd_name):
     for i, cmd in enumerate(commands):
-        qclient.update_job_step(job_id, msg % i)
+        qclient.update_job_step(job_id, msg % (i+1))
         std_out, std_err, return_value = system_call(cmd)
         if return_value != 0:
             error_msg = ("Error running %s:\nStd out: %s\nStd err: %s"

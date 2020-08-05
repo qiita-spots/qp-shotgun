@@ -173,7 +173,7 @@ def shogun(qclient, job_id, parameters, out_dir):
         The results of the job
     """
     # Step 1 get the rest of the information need to run Atropos
-    qclient.update_job_step(job_id, "Step 1 of 6: Collecting information")
+    qclient.update_job_step(job_id, "Step 1 of 7: Collecting information")
     artifact_id = parameters['input']
     del parameters['input']
 
@@ -188,7 +188,7 @@ def shogun(qclient, job_id, parameters, out_dir):
 
     # Step 2 converting to fna
     qclient.update_job_step(
-        job_id, "Step 2 of 6: Converting to FNA for Shogun")
+        job_id, "Step 2 of 7: Converting to FNA for Shogun")
 
     rs = fps['raw_reverse_seqs'] if 'raw_reverse_seqs' in fps else []
     samples = make_read_pairs_per_sample(
@@ -203,7 +203,7 @@ def shogun(qclient, job_id, parameters, out_dir):
     # Step 3 align
     align_cmd = generate_shogun_align_commands(
         comb_fp, out_dir, parameters)
-    sys_msg = "Step 3 of 6: Aligning FNA with Shogun (%d/{0})".format(
+    sys_msg = "Step 3 of 7: Aligning FNA with Shogun (%d/{0})".format(
         len(align_cmd))
     success, msg = _run_commands(
         qclient, job_id, align_cmd, sys_msg, 'Shogun Align')
@@ -212,7 +212,7 @@ def shogun(qclient, job_id, parameters, out_dir):
         return False, None, msg
 
     # Step 4 taxonomic profile
-    sys_msg = "Step 4 of 6: Taxonomic profile with Shogun (%d/{0})"
+    sys_msg = "Step 4 of 7: Taxonomic profile with Shogun (%d/{0})"
     assign_cmd, profile_fp = generate_shogun_assign_taxonomy_commands(
         out_dir, parameters)
     success, msg = _run_commands(
@@ -220,7 +220,7 @@ def shogun(qclient, job_id, parameters, out_dir):
     if not success:
         return False, None, msg
 
-    sys_msg = "Step 5 of 6: Compressing and converting alignment to BIOM"
+    sys_msg = "Step 5 of 7: Compressing and converting alignment to BIOM"
     qclient.update_job_step(job_id, sys_msg)
     alignment_fp = join(out_dir, 'alignment.%s.%s' % (
         parameters['aligner'], ALN2EXT[parameters['aligner']]))
@@ -234,12 +234,13 @@ def shogun(qclient, job_id, parameters, out_dir):
     output = run_shogun_to_biom(profile_fp, [None, None, None, True],
                                 out_dir, 'profile')
 
+    alignment_fp_xz = '%s.xz' % alignment_fp
     ainfo = [ArtifactInfo('Shogun Alignment Profile', 'BIOM',
                           [(output, 'biom'),
-                           ('%s.xz' % alignment_fp, 'log')])]
+                           (alignment_fp_xz, 'log')])]
 
     # Step 5 redistribute profile
-    sys_msg = "Step 6 of 6: Redistributed profile with Shogun (%d/{0})"
+    sys_msg = "Step 6 of 7: Redistributed profile with Shogun (%d/{0})"
     levels = ['phylum', 'genus', 'species']
     redist_fps = []
     for level in levels:
@@ -257,6 +258,28 @@ def shogun(qclient, job_id, parameters, out_dir):
             redist_fp, biom_in, out_dir, level, 'redist')
         aname = 'Taxonomic Predictions - %s' % level
         ainfo.append(ArtifactInfo(aname, 'BIOM', [(output, 'biom')]))
+
+    # Woltka only works with WOL databases
+    if 'wol' in parameters['database']:
+        sys_msg = "Step 7 of 7: Wolka gOTU and per-gene tables (%d/{0})"
+        per_genome_fp = join(out_dir, 'woltka_per_genome.biom')
+        per_gene_fp = join(out_dir, 'woltka_per_gene.biom')
+        coord_fp = join(parameters['database'], 'WoLmin.coords')
+        commands = [
+            'woltka classify -i %s -o %s' % (alignment_fp_xz, per_genome_fp),
+            'woltka classify -i %s -c %s -o %s' % (
+                alignment_fp_xz, coord_fp, per_gene_fp)]
+
+        success, msg = _run_commands(
+            qclient, job_id, commands, sys_msg, 'Woltka')
+        if not success:
+            return False, None, msg
+
+        ainfo.extend([
+            ArtifactInfo('Woltka - per genome', 'BIOM', [
+                (per_genome_fp, 'biom')]),
+            ArtifactInfo('Woltka - per gene', 'BIOM', [
+                (per_gene_fp, 'biom')])])
 
     return True, ainfo, ""
 

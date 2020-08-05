@@ -53,6 +53,8 @@ setup(name='qp-shogun',
       scripts=['scripts/configure_shogun', 'scripts/start_shogun'],
       extras_require={'test': ["nose >= 0.10.1", "pep8"]},
       install_requires=['click >= 3.3', 'future', 'pandas >= 0.15',
-                        'h5py >= 2.3.1', 'biom-format'],
+                        'h5py >= 2.3.1', 'biom-format',
+                        'woltka @ https://github.com/'
+                        'qiyunzhu/woltka/archive/master.zip'],
       classifiers=classifiers
       )

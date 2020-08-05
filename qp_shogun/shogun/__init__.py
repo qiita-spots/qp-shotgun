@@ -37,6 +37,8 @@ outputs = {
     'Taxonomic Predictions - phylum': 'BIOM',
     'Taxonomic Predictions - genus': 'BIOM',
     'Taxonomic Predictions - species': 'BIOM',
+    'Woltka - per genome': 'BIOM',
+    'Woltka - per gene': 'BIOM',
     }
 dflt_param_set = generate_shogun_dflt_params()
 
