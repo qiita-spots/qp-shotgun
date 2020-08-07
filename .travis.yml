@@ -43,6 +43,8 @@ install:
   - export QC_SHOGUN_DB_DP=$PWD/qp_shogun/shogun/databases/
   - export QC_SORTMERNA_DB_DP=$PWD/qp_shogun/sortmerna/databases/rRNA_databases/
   - for file in $(ls $QC_SHOGUN_DB_DP); do tar xvjf $QC_SHOGUN_DB_DP$file -C $QC_SHOGUN_DB_DP; done
+  # the min WoL coords file needs to be renamed WoLr1.coords
+  - mv ${QC_SHOGUN_DB_DP}/wol/WoLmin.coords ${QC_SHOGUN_DB_DP}/wol/WoLr1.coords
   - for file in $(ls $QC_SORTMERNA_DB_DP); do tar xvjf $QC_SORTMERNA_DB_DP$file -C $QC_SORTMERNA_DB_DP; done
   # shogun is currently installing an old version of burst so let's install the correct one
   - wget https://github.com/knights-lab/BURST/releases/download/v0.99.8/burst_linux_DB15
