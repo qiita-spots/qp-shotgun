@@ -264,7 +264,7 @@ def shogun(qclient, job_id, parameters, out_dir):
         sys_msg = "Step 7 of 7: Wolka gOTU and per-gene tables (%d/{0})"
         per_genome_fp = join(out_dir, 'woltka_per_genome.biom')
         per_gene_fp = join(out_dir, 'woltka_per_gene.biom')
-        coord_fp = join(parameters['database'], 'WoLmin.coords')
+        coord_fp = join(parameters['database'], 'WoLr1.coords')
         commands = [
             'woltka classify -i %s -o %s' % (alignment_fp_xz, per_genome_fp),
             'woltka classify -i %s -c %s -o %s' % (
